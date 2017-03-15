@@ -1,0 +1,188 @@
+ldap-tgen test
+
+(performed on debian 8)
+install slapd:
+as root:
+apt-get install slapd
+Administrator password: test
+
+install ldap-utils (for utilities like ldap-search):
+as root:
+apt-get install ldap-utils
+
+
+
+To be confirmed:
+
+
+dpkg-reconfigure slapd
+Domain: example.com
+Organization name: Example
+Administrator password: test
+Database backend: MDB
+Do you want the database to be removed when slapd is purged: Yes
+Move old database? Yes
+Allow LDAPv2 protocol? No
+
+if you have:
+Backup path /var/backups/unknown-2.4.40+dfsg-1+deb8u2.ldapdb exists. Giving up...
+remove backup and run dpkg-reconfigure again:
+rm -fr /var/backups/unknown-2.4.40+dfsg-1+deb8u2.ldapdb
+
+create an example minimal database, download:
+
+https://raw.githubusercontent.com/ghchinoy/forgerock-docker/master/ldifs/Example.ldif
+
+remove "aci:" attributes in this ldif file
+remove "cn=com" and "dc=example,dc=com" entries in this file as they are already
+created by dpkg-reconfigure
+
+
+
+delete those entries:
+dn: cn=Bronze Class of Service,dc=example,dc=com
+dn: cn=Silver Class of Service,dc=example,dc=com
+dn: cn=Gold Class of Service,dc=example,dc=com
+dn: cn=Inherit Department Number From Manager,dc=example,dc=com
+dn: cn=Inherit From Locality,dc=example,dc=com
+dn: dc=ref,dc=com
+dn: dc=references,dc=ref,dc=com
+
+delete those lines:
+ds-privilege-name: proxied-auth
+
+delete spaces at end of lines
+
+
+
+
+ldapadd -D "cn=admin,dc=example,dc=com" -W -f Example.ldif
+
+
+check that it works:
+ldapsearch -x -LLL -b dc=example,dc=com 'uid=abarnes' cn gidNumber
+dn: uid=abarnes,ou=People,dc=example,dc=com
+cn: Anne-Louise Barnes
+gidNumber: 1000
+
+
+
+in tgen, .ini file must be configured in $HOME/TestU:
+
+[Popul_*]
+...
+
+[Scenario_*]
+..
+action1 = SCE_Begin
+action2 = LDAP_Bind_Rq
+action3 = LDAP_Search_Rq,"\0","\*"
+action4 = LDAP_UnBind_Rq
+action5 = SCE_End
+
+[Trafic_*]
+...
+
+available actions:
+
+SCE_Begin
+SCE_End
+
+SCE_Wait
+LDAP_Bind_Rq
+LDAP_UnBind_Rq
+LDAP_Search_Rq
+LDAP_Modify_Rq
+LDAP_Add_Rq
+LDAP_Delete_Rq
+RADIUS_Access_Rq
+RADIUS_AccessWP_Rq
+RADIUS_AccountStart_Rq
+RADIUS_AccountInterim_Rq
+RADIUS_AccountStop_Rq
+RADIUS_AccountOn_Rq
+RADIUS_AccountOff_Rq
+
+
+
+_LDAPCTRL_
+// Syntax: Ldap_<action>_Req "_LDAPCTRL_ 0 <oid1> <val1> | 1 <oid2> <val2> | ... | 0 <oidn> <valn> " "..."
+alcatel object id (oid): 1.3.6.1.4.1.637
+
+
+
+Launch tgen_mas binary using a shell to define environment variables:
+example:
+
+ 25 setenv HSS_IP_CX                                                                172.25.126.10
+ 26 setenv LDAPHOST                         ${HSS_IP_CX}:389
+ 27 setenv LDAPBINDDN                                                               cn=manager,NE=MOBILE_DATA_SERVER
+ 28 setenv LDAP_SECRET                                                      secret
+ 29 setenv LDAP_AUTHENTICATION_METHOD       "-x -w "${LDAP_SECRET}
+ 30 setenv LDAP_PROTOCOL_VERSION            "-P3"
+ 31 setenv LDAP_OPTION                                      " "
+ 32 setenv RAD_SECRET                                                       Alcatel
+ 33 setenv RAD_RACINE                                                       ${INSTALLDIR}/TestU
+ 34 
+ 35 alias tgen 'xterm -geometry 130x35 -bg black -fg grey -rw -sb -sl 10000 -si -fn 6x13 -hold -T "tgen \!*" -e tcsh -c "tgen_mas \!*" &'
+
+
+
+export PATH=$PATH:$HOME/TestU
+export ROOT_DIR=/home/test/tgen-local
+export LD_LIBRARY_PATH=$ROOT_DIR/hss_freeradius/x86_64/lib:$ROOT_DIR/mds_tests/uma/Common/WpaSupplicant/x86_64:$ROOT_DIR/mds_tests/Common/Tgen/fake_lib
+# to find etc/raddb:
+export RAD_RACINE=$ROOT_DIR/hss_freeradius
+
+cd /home/test/tgen-local/mds_tests/Common/Tgen/Bin64
+
+./tgen_mas -p100 -s6 -t5 localhost
+
+
+
+
+
+BACKUP
+======
+
+
+
+replace domain in this file with your own one:
+To do that, drop the dc=com top block in this file if needed.
+Then replace with your own domain:
+sed -i 's/dc=example,dc=com/dc=nodomain/g' Example.ldif
+
+import this database:
+
+ldapadd -D "cn=admin,dc=nodomain" -W -f Example.ldif
+Enter LDAP Password: use administrator password defined during slapd install
+
+*****
+create ldif test file test.ldif:
+
+---
+
+dn: ou=people,dc=nodomain
+objectClass: organizationalUnit
+ou: people
+
+dn: ou=groups,dc=nodomain
+objectClass: organizationalUnit
+ou: groups
+
+---
+
+insert those entries in database using:
+
+ldapadd -D "cn=admin,dc=nodomain" -W -f test2.ldif 
+Enter LDAP Password: use administrator password defined during slapd install
+adding new entry "ou=people,dc=nodomain"
+
+adding new entry "ou=groups,dc=nodomain"
+
+
+
+delete those entries using:
+
+ldapdelete -D "cn=admin,dc=nodomain" -W ou=people,dc=nodomain
+ldapdelete -D "cn=admin,dc=nodomain" -W ou=groups,dc=nodomain
