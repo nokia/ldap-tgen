@@ -1,0 +1,337 @@
+This is sysstat's Frequently Asked Questions!
+Be sure to read this carefully before asking for help...
+If you don't find the solution to your problem here then send me an email
+(please remember to include sysstat's version number, a sample output
+showing the bug, and the contents of the /proc/stat file for your system.
+Also tell me what version your kernel is).
+
+
+1. GENERAL QUESTIONS
+
+1.1. When I compile sysstat, it fails with the following message:
+     "make: msgfmt: Command not found".
+1.2. When I try to compile sysstat, it fails and says it cannot find some
+     include files.
+     
+2. QUESTIONS RELATING TO SAR/SADC
+
+2.1. The sar command complains with the following message:
+     "Invalid system activity file: ...".
+2.2. The sar command complains with the following message:
+     "Cannot append data to that file".
+2.3. The sar command complains with the following message:
+     "Invalid data format".
+2.4. I get the following error message when I try to run sar:
+     "Cannot open /var/log/sa/sa30: No such file or directory".
+2.5. Are sar daily data files fully compatible with Sun Solaris format
+     sar files?
+2.6. I have some trouble running sar on my SMP box. My server crashes
+     with a kernel oops.
+2.7. The "Average:" results from the sar command are just rubbish...
+2.8. My database (e.g. MySQL) doesn't appear to understand the time zone
+     displayed by 'sar -H'...
+2.9. I tried to use the -h option of the sar command, together with the
+     options -s and -e. Unfortunately, I have nothing displayed at all.
+2.10. I cannot see all my disks when I use the sar -d command...
+2.11. Do you know a tool which can graphically plot the data collected by sar?
+2.12. When I launch sadc, I get the error message:
+      "flock: Resource temporarily unavailable".
+
+3. QUESTIONS RELATING TO IOSTAT
+
+3.1. I can't see all my disks when I use the iostat command...
+3.2. iostat -x doesn't report disk I/O statistics...
+3.3. Why can't iostat display extended statistics for partitions with
+     2.6.x kernels?
+3.4. I don't understand the output of iostat. It doesn't match what I expect
+     it to be...
+3.5. Why values displayed by iostat are so different in the first report
+     from those displayed in subsequent ones?
+
+
+1. GENERAL QUESTIONS
+####################
+
+1.1. When I compile sysstat, it fails with the following message:
+make: msgfmt: Command not found
+make: ***[locales] Error 127
+
+The msgfmt command belongs to the GNU gettext package.
+If you don't have it on your system, just answer 'n' (for "no") at the
+question
+"Enable National Language Support (NLS)? [y]"
+during config stage (make config), then compile sysstat as usual (make ;
+make install).
+Please read the README-nls file included in sysstat source package to learn
+some more about National Language Support.
+
+~~~
+
+1.2. When I try to compile sysstat, it fails and says it cannot find some
+include files:
+In file included from /usr/include/bits/errno.h:25,
+                 from /usr/include/errno.h:36,
+                 from common.c:26:
+/usr/include/linux/errno.h:4: asm/errno.h: No such file or directory
+<SNIP>
+common.c: In function `get_kb_shift':
+common.c:180: `PAGE_SIZE' undeclared (first use in this function)
+common.c:178: warning: `size' might be used uninitialized in this function
+make: *** [common.o] Error 1
+
+Make sure that you have the Linux kernel sources installed in
+/usr/src/linux. Also make sure that the symbolic link exists in the
+/usr/src/linux/include directory and points to the right architecture, e.g.:
+# ll /usr/src/linux/include/asm
+lrwxrwxrwx   1 root     root            8 May  5 18:31 /usr/src/linux/include/asm -> asm-i386
+In fact, only the Linux kernel headers should be necessary to be able
+to compile sysstat.
+
+
+2. QUESTIONS RELATING TO SAR
+############################
+
+2.1. The sar command complains with the following message:
+Invalid system activity file: ...
+
+The format of the daily data files created by the sar command you are
+now using is not compatible with the format of the files created by a
+previous version of sar.
+The solution is easy: just log in as root and remove by hand all the files
+located in the /var/log/sa directory:
+# rm /var/log/sa/sa??
+
+~~~
+
+2.2. The sar command complains with the following message:
+Cannot append data to that file
+
+The internal structure of the data file does not allow sar to append
+data to it. The data file may come from another machine, or the components
+of the current box, such as the number of processors, may have changed.
+Use another data file, or delete the current daily data file, and try again.
+
+~~~
+
+2.3. The sar command complains with the following message:
+Invalid data format
+
+This error message means that sadc (the system activity data collector that
+sar is using) is not consistent with the sar command. In most cases this is
+because the sar and sadc commands do not belong to the same release of the
+sysstat package. Remember that sar searches for sadc in predefined
+directories (/usr/lib/sa, /usr/local/lib/sa, ...) before looking in the
+current directory!
+
+~~~
+
+2.4. I get the following error message when I try to run sar:
+$ sar
+Cannot open /var/log/sa/sa30: No such file or directory
+
+Please read the sar(1) manual page! Daily data files are created in the
+/var/log/sa directory using the data collector (sadc) or using option
+-o with sar. Once they are created, sar can display statistics saved
+in those files.
+But sar can also display statistics collected "on the fly": just enter
+the proper option on the command line to indicate which statistics are
+to be displayed, and also specify an <interval> and <count> number.
+E.g.:
+# sar 2 5  --> will report CPU utilization every two seconds, five times.
+# sar -n DEV 3 0  --> will report network device utilization every
+3 seconds, in an infinite loop.
+
+~~~
+
+2.5. Are sar daily data files fully compatible with Sun Solaris format
+sar files?
+
+No, the format of the binary data files created by sysstat's sar command
+is not compatible with formats from other Unixes, because it contains
+data which are closely linked to Linux.
+For the same reason, sysstat cannot work on platforms other than Linux...
+
+~~~
+
+2.6. I have some trouble running sar on my SMP box. My server crashes
+with a kernel oops:
+Feb 17 04:05:00 bolums1 kernel: Unable to handle kernel paging request
+at virtual address fffffc1c
+Feb 17 04:05:00 bolums1 kernel: current->tss.cr3 = 19293000, %cr3 = 19293000
+Feb 17 04:05:00 bolums1 kernel: *pde = 0026b067
+Feb 17 04:05:00 bolums1 kernel: *pte = 00000000
+Feb 17 04:05:00 bolums1 kernel: Oops: 0000
+Feb 17 04:05:00 bolums1 kernel: CPU:    0
+Feb 17 04:05:00 bolums1 kernel: EIP:
+<...>
+
+The trouble you have is triggered by a *Linux* kernel bug, not a sysstat
+one... The best solution is to upgrade your kernel to the latest stable
+release.
+Also, if you cannot upgrade your box, try to compile sysstat after
+answering 'y' to the question:
+"Linux SMP race in serial driver workaround?"
+at the config stage (make config). Indeed, we found that 2.2.x kernels
+(with x <= 15) have an SMP race condition, which the sar command
+may trigger when it reads the /proc/tty/driver/serial file.
+
+~~~
+
+2.7. The "Average:" results from the sar command are just rubbish...
+E.g.:
+ 11:10:00 AM       all      0.54      0.00      0.89     98.57
+ 11:20:01 AM       all      3.02      8.05     22.85     66.08
+ 11:30:01 AM       all      8.15      0.00      2.31     89.54
+ 11:40:01 AM       all      8.03      0.00      2.42     89.55
+ 11:50:01 AM       all     16.04      0.00      2.81     81.16
+ 12:00:00 PM       all     21.11      0.00      3.23     75.66
+ 03:40:01 PM       all    100.01    100.01    100.01      0.00
+ 04:40:00 PM       all    100.00      0.00    100.00      0.00
+ 04:50:00 PM       all      5.87      0.00      1.26     92.87
+ 05:00:00 PM       all      4.70      0.00      1.48     93.82
+ 05:10:00 PM       all      4.93      0.00      1.29     93.78
+ Average:          all    100.22    100.20    100.13      0.00
+
+Your sar command was not installed properly (in fact, you compiled it but
+forgot to run 'make install' as the last stage). Whenever your computer
+is restarted (as it is the case here between 12:00:00 PM and 03:40:01 PM),
+the sysstat shell script must be called by the system, so that the
+LINUX RESTART message can be inserted into the daily data file, indicating
+that the relevant kernel counters have been reinitialized...
+
+~~~
+
+2.8. My database (e.g. MySQL) doesn't appear to understand the time zone
+displayed by 'sar -H'...
+
+The format includes the timezone detail in the output. This is to make
+sure it is communicated clearly that UTC is how the data is always
+converted and printed. Moreover we don't depend on the TZ environment
+variable and we don't have some data converted to a different timezone
+for any reason, known or unknown.
+When you deal with raw accounting data you always want it in UTC.
+Of course, you want it to all be the same when loading into a database.
+If your database can't deal with timezones, you should write a short script
+to strip the "UTC" characters from the data being loaded into the database.
+
+~~~
+
+2.9. I tried to use the -h option of the sar command, together with the
+options -s and -e. Unfortunately, I have nothing displayed at all.
+
+This is because no data belong to the specified time interval!
+In fact, -h option makes sar display its timestamp as a UTC value (Coordinated
+Universal Time), as indicated in the manual page. The UTC value may be
+different from the value that sar displays when option -h is not used.
+The same remark applies to the use of -H option.
+
+~~~
+
+2.10. I cannot see all my disks when I use the sar -d command...
+
+See question 3.1 below.
+
+~~~
+
+2.11. Do you know a tool which can graphically plot the data collected by sar?
+
+Several such tools are lying around on the internet. I haven't tested all of
+them and there must still be some way for improvement...
+You can find among others: isag (a Perl script included in the sysstat
+package), sarvant (a Python script which can be found at
+http://sarvant.sourceforge.net); sar2gp (http://sar2gp.berlios.de)...
+I've also heard of commercial tools which use sysstat: PerfMan comes to mind,
+among others.
+If you find others which you think are of real interest, please let me know
+so that I can update this list.
+
+~~~
+
+2.12. When I launch sadc, I get the error message:
+      "flock: Resource temporarily unavailable"
+
+You are launching sadc using -L option. With this option, sadc tries to
+get an exclusive lock on the output file. The above error message indicates
+that another sadc process was running and had already locked the same output
+file. Stop all sadc instances and try again.
+
+
+3. QUESTIONS RELATING TO IOSTAT
+###############################
+
+3.1. I can't see all my disks when I use the iostat command...
+
+Yes. This is a kernel limit. Old kernels (2.2.x for instance) used to
+maintain stats for the first four devices.
+The accounting code has changed in 2.4 kernels, and the result may (or
+may not) be better for your system. Indeed, Linux 2.4 maintains the stats
+in a two dimensional array, with a maximum of 16 devices (DK_MAX_DISK
+in the kernel sources). Moreover, if the device major number exceeds
+DK_MAX_MAJOR (whose value also defaults to 16 in the kernel sources),
+then stats for this device will not be collected.
+So, a solution may be simply to change the values of these limits in 
+linux/include/linux/kernel_stat.h and recompile your kernel.
+You should no longer have any problem with post 2.5 kernels, since
+statistics are maintained by the kernel for all the devices.
+In the particular case of iostat, also be sure to use the ALL keyword
+on the command line to display statistical information relating to
+every device, including those that are defined but have never been used
+by the system.
+
+~~~
+
+3.2. iostat -x doesn't report disk I/O statistics...
+
+For 'iostat -x' to be able to report extended disk I/O statistics,
+it is better to use a recent version of the Linux kernel (2.6.x).
+Indeed, iostat tries to read data from the /proc/diskstats file or
+from the sysfs filesystem for that.
+But iostat may also be able to display extended statistics with
+older kernels (e.g. 2.4.x) providing that all the necessary
+statistical information is available in the /proc/partitions file,
+which requires that a patch be applied to the kernel (this is
+often done on kernels included in various distros).
+
+~~~
+
+3.3. Why can't iostat display extended statistics for partitions with
+     2.6.x kernels?
+
+Because the kernel maintains these stats only for devices, and not for
+partitions! Here is an excerpt from the document iostats.txt written by
+Rick Lindsley (ricklind@us.ibm.com) and included in the kernel source
+documentation:
+"There were significant changes between 2.4 and 2.6 in the I/O subsystem.
+As a result, some statistic information disappeared. The translation from
+a disk address relative to a partition to the disk address relative to
+the host disk happens much earlier.  All merges and timings now happen
+at the disk level rather than at both the disk and partition level as
+in 2.4.  Consequently, you'll see a different statistics output on 2.6 for
+partitions from that for disks."
+
+~~~
+
+3.4. I don't understand the output of iostat. It doesn't match what I expect it
+to be...
+
+By default iostat displays I/O activity in blocks per second. With old
+kernels (i.e. older than 2.4.x) a block is of indeterminate size and therefore
+the displayed values are not useful.
+With recent kernels (kernels 2.4 and later), iostat is now able to get disk
+activities from the kernel expressed in a number of sectors. If you take a
+look at the kernel code, the sector size is actually allowed to vary although
+I have never seen anything other than 512 bytes.
+
+~~~
+
+3.5. Why values displayed by iostat are so different in the first report
+     from those displayed in subsequent ones?
+
+Probably because, as written in the manual page, the first report generated
+by iostat concerns the time since system startup, whereas subsequent ones
+cover only the time since the previous report (that is to say, the interval
+of time entered on the command line).
+
+--	
+Sebastien Godard (sysstat <at> wanadoo.fr) is the author and the current
+maintainer of this package.

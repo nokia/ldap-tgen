@@ -1,0 +1,46 @@
+TARGET      = @targetname@
+SRCS        = rlm_eap.c eap.c mem.c state.c
+HEADERS     = eap.h rlm_eap.h
+RLM_CFLAGS  = $(INCLTDL) -I@srcdir@/libeap -I/3pp_openssl/src/include/openssl
+CLIENTLIBS  = -Llibeap -leap -L../../lib -lradius -L/3pp_openssl/x86/lib -lcrypto
+#RLM_LIBS    = $(shell for x in types/rlm_eap*/rlm_eap*.la;do echo -dlpreopen $$x;done)
+RLM_INSTALL = install-types
+RLM_SUBDIRS = libeap @eaptypes@ 
+
+
+$(STATIC_OBJS): $(HEADERS)
+
+#
+#  Statically link a few modules.
+# 
+STATIC_OBJS	+= $(shell ls -1 libeap/eapcommon.o types/rlm_eap_md5/rlm_eap_md5.a types/rlm_eap_leap/rlm_eap_leap.a types/rlm_eap_tls/rlm_eap_tls.a types/rlm_eap_ttls/rlm_eap_ttls.a types/rlm_eap_sim/rlm_eap_sim.a 2>/dev/null)
+
+$(DYNAMIC_OBJS): $(HEADERS)
+
+all:
+	@$(MAKE) $(MFLAGS) static dynamic
+	@$(MAKE) $(MFLAGS) WHAT_TO_MAKE=$@ common
+	@$(MAKE) $(MFLAGS) radeapclient
+
+radeapclient: radeapclient.o ../../lib/libradius.a
+	$(LIBTOOL) --mode=link $(CC) $(CFLAGS) ${RLM_CFLAGS} $(LDFLAGS) -o radeapclient radeapclient.o $(CLIENTLIBS) $(LIBS)
+
+radeapclient.o: radeapclient.c $(INCLUDES)
+	$(CC) $(CFLAGS) ${RLM_CFLAGS} -c radeapclient.c
+
+allclean:
+	@$(MAKE) $(MFLAGS) WHAT_TO_MAKE=clean common
+
+install-types:
+	$(INSTALL) -m 755    radeapclient	$(R)$(bindir)
+	@$(MAKE) $(MFLAGS) WHAT_TO_MAKE=install common
+
+common:
+	@for dir in $(RLM_SUBDIRS); do  \
+		echo "Making $(WHAT_TO_MAKE) in $$dir..."; \
+		(cd $$dir && $(MAKE) $(MFLAGS) $(WHAT_TO_MAKE)) || exit 1;\
+	done
+
+## this uses the RLM_CFLAGS and RLM_LIBS and SRCS defs to make TARGET.
+include ../rules.mak
+

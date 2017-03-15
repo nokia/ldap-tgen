@@ -1,0 +1,173 @@
+#
+# $Id: Makefile.in,v 1.20 2003/10/31 22:30:47 mcr Exp $
+#
+
+include ../../Make.inc
+
+SERVER_OBJS	= radiusd.o files.o util.o acct.o nas.o log.o valuepair.o \
+		  version.o proxy.o exec.o auth.o timestr.o conffile.o \
+		  modules.o modcall.o session.o xlat.o threads.o smux.o \
+		  radius_snmp.o client.o request_list.o mainconfig.o
+INCLUDES	= ../include/radiusd.h ../include/radius.h ../include/libradius.h ../include/conf.h ../include/autoconf.h
+
+CFLAGS		+= -I../include $(SNMP_INCLUDE) 
+#LDFLAGS		+= -L../lib
+LDFLAGS		+= -L../lib -L/usr/opt/alt/usr/lib/threads
+MODULE_LIBS	= $(STATIC_MODULES)
+MODULE_OBJS	=
+VFLAGS		= -DRADIUSD_MAJOR_VERSION=$(RADIUSD_MAJOR_VERSION)
+VFLAGS		+= -DRADIUSD_MINOR_VERSION=$(RADIUSD_MINOR_VERSION)
+BINARIES	= radiusd radwho radzap radclient radrelay 
+
+#
+#  Not using shared libraries, add in ALL known static modules
+# at build time.
+#
+ifneq ($(USE_SHARED_LIBS),yes)
+#
+#  For static linking...
+#
+MODULES += rlm_eap_md5  rlm_eap_leap rlm_eap_tls rlm_eap_ttls rlm_eap_sim
+LIBS += $(OPENSSL_LIB) -lcrypto -lssl -lcrypto -lssl -L../modules/rlm_eap/libeap -leap
+#
+MODULE_LIBS	+= $(shell for x in $(MODULES);do test -f ../modules/$$x/$$x.la && echo -dlpreopen ../modules/$$x/$$x.la;done)
+MODULE_LIBS	+= $(shell for x in $(MODULES);do test -f ../modules/*/types/$$x/$$x.la && echo -dlpreopen ../modules/*/types/$$x/$$x.la;done)
+MODULE_OBJS	+= $(shell for x in $(MODULES);do test -f ../modules/$$x/$$x.la && echo ../modules/$$x/$$x.la;done)
+MODULE_OBJS	+= $(shell for x in $(MODULES);do test -f ../modules/*/types/$$x/$$x.la && echo ../modules/*/types/$$x/$$x.la;done)
+endif
+
+#LIBS		+= -lradius $(SNMP_LIBS)
+LIBS		+= -lradius -lpthread -lrt $(SNMP_LIBS)
+
+
+all:	$(BINARIES)
+
+#
+# Begin added by EmA
+# Part for radeapclient, taken from src/modules/rlm_eap
+#
+#RLM_CFLAGS  = $(INCLTDL) -I../modules/rlm_eap/libeap
+#CLIENTLIBS  = -L../modules/rlm_eap/libeap -leap -L../lib -lradius
+
+#radeapclient: radeapclient.o ../lib/libradius.a
+#	$(CC) $(CFLAGS) ${RLM_CFLAGS} $(LDFLAGS) -o radeapclient radeapclient.o $(CLIENTLIBS) $(LIBS)
+
+#radeapclient.o: ../modules/rlm_eap/radeapclient.c $(INCLUDES)
+#	$(CC) $(CFLAGS) ${RLM_CFLAGS} -c ../modules/rlm_eap/radeapclient.c
+#
+# End added by EmA
+#
+
+radiusd: $(SERVER_OBJS) ../lib/libradius.a $(MODULE_OBJS)
+	$(LIBTOOL) --mode=link $(CC) -export-dynamic -dlopen self \
+		$(CFLAGS) $(LDFLAGS) -o $@ \
+		$(SERVER_OBJS) $(LCRYPT) $(LIBS) \
+		$(PTHREADLIB) $(LIBLTDL) $(MODULE_LIBS) 
+
+radiusd.o: radiusd.c $(INCLUDES)  ../include/request_list.h ../include/modules.h ../include/modcall.h ../include/modpriv.h
+	$(CC) $(CFLAGS) -c radiusd.c
+
+acct.o: acct.c $(INCLUDES) ../include/modules.h
+	$(CC) $(CFLAGS) -c acct.c
+
+files.o: files.c $(INCLUDES)
+	$(CC) $(CFLAGS) -c files.c
+
+util.o: util.c $(INCLUDES)
+	$(CC) $(CFLAGS) -c util.c
+
+nas.o:  nas.c $(INCLUDES)
+	$(CC) $(CFLAGS) -c nas.c
+
+log.o:  log.c $(INCLUDES)
+	$(CC) $(CFLAGS) -c log.c
+
+conffile.o: conffile.c $(INCLUDES) ../include/modules.h
+	$(CC) $(CFLAGS) -c conffile.c
+
+mainconfig.o: mainconfig.c $(INCLUDES) ../include/modules.h
+	$(CC) $(CFLAGS) -c mainconfig.c
+
+timestr.o: timestr.c $(INCLUDES)
+	$(CC) $(CFLAGS) -c timestr.c
+
+modules.o:  modules.c $(INCLUDES)
+	$(CC) $(CFLAGS) $(VFLAGS) $(INCLTDL) -c modules.c
+
+modcall.o:  modcall.c $(INCLUDES)
+	$(CC) $(CFLAGS) $(INCLTDL) -c modcall.c
+
+session.o:  session.c $(INCLUDES) ../include/modules.h
+	$(CC) $(CFLAGS) -c session.c
+
+request_list.o:  request_list.c $(INCLUDES)
+	$(CC) $(CFLAGS) -c request_list.c
+
+proxy.o:  proxy.c $(INCLUDES)
+	$(CC) $(CFLAGS) -c proxy.c
+
+exec.o:  exec.c $(INCLUDES)
+	$(CC) $(CFLAGS) -c exec.c
+
+auth.o:  auth.c $(INCLUDES) ../include/modules.h
+	$(CC) $(CFLAGS) -c auth.c
+
+valuepair.o:  valuepair.c $(INCLUDES)
+	$(CC) $(CFLAGS) -c valuepair.c
+
+version.o: version.c $(INCLUDES)
+	$(CC) $(CFLAGS) -o version.o -c version.c
+
+xlat.o: xlat.c $(INCLUDES)
+	$(CC) $(CFLAGS) -o xlat.o -c xlat.c
+
+threads.o: threads.c $(INCLUDES)
+	$(CC) $(CFLAGS) -o threads.o -c threads.c
+
+smux.o: smux.c $(INCLUDES)
+	$(CC) $(CFLAGS) -o smux.o -c smux.c
+
+radius_snmp.o: radius_snmp.c $(INCLUDES)
+	$(CC) $(CFLAGS) -o radius_snmp.o -c radius_snmp.c
+
+radclient: radclient.o ../lib/libradius.a
+	$(CC) $(CFLAGS) $(LDFLAGS) -o radclient radclient.o $(LIBS)
+
+radclient.o: radclient.c $(INCLUDES)
+	$(CC) $(CFLAGS) -c radclient.c
+
+radrelay: radrelay.o mainconfig.o util.o nas.o client.o log.o conffile.o files.o xlat.o ../lib/libradius.a
+	$(CC) $(CFLAGS) $(LDFLAGS) -o radrelay radrelay.o mainconfig.o util.o nas.o client.o log.o conffile.o files.o xlat.o $(LIBS)
+
+radrelay.o: radrelay.c $(INCLUDES)
+	$(CC) $(CFLAGS) -c radrelay.c
+
+radwho.o: radwho.c $(INCLUDES)
+	$(CC) $(CFLAGS) -c radwho.c
+
+radwho: radwho.o mainconfig.o util.o nas.o client.o log.o conffile.o files.o xlat.o
+	$(CC) $(LDFLAGS) -o radwho radwho.o mainconfig.o util.o nas.o client.o log.o conffile.o files.o xlat.o $(LIBS)
+
+radzap.o: radzap.c $(INCLUDES)
+	$(CC) $(CFLAGS) -c radzap.c
+
+radzap: radzap.o mainconfig.o util.o nas.o log.o client.o conffile.o files.o xlat.o
+	$(CC) $(CFLAGS) $(LDFLAGS) -o radzap radzap.o mainconfig.o util.o nas.o log.o client.o conffile.o files.o xlat.o $(LIBS)
+
+clean:
+	rm -rf *.o *.so *~ $(BINARIES) .libs
+
+install:
+#	$(LIBTOOL) --mode=install $(INSTALL) -m 755 $(INSTALLSTRIP) radiusd	$(R)$(sbindir)
+#	$(INSTALL) -m 755 $(INSTALLSTRIP) radwho		$(R)$(bindir)
+#	$(INSTALL) -m 755 $(INSTALLSTRIP) radzap		$(R)$(bindir)
+	$(LIBTOOL) --mode=install $(INSTALL) -m 755 radiusd	$(R)$(sbindir)
+	$(INSTALL) -m 755 	radwho		$(R)$(bindir)
+	$(INSTALL) -m 755 	radzap		$(R)$(bindir)
+	$(INSTALL) -m 755    radlast		$(R)$(bindir)
+	$(INSTALL) -m 755    radclient	$(R)$(bindir)
+	$(INSTALL) -m 755    radrelay		$(R)$(bindir)
+	$(INSTALL) -m 755    radtest 		$(R)$(bindir)
+#	$(INSTALL) -d -m 755			$(R)$(logdir)
+#	$(INSTALL) -d -m 755			$(R)$(radacctdir)
+	$(INSTALL) -m 755    checkrad.pl	$(R)$(sbindir)/checkrad

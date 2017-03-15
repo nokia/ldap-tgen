@@ -1,0 +1,521 @@
+FreeRADIUS 1.0.0 ; $Date: 2003/10/15 20:20:20 $, urgency=low
+	* EAP-TTLS support in rlm_eap
+	* Added support for rejected packets to run an Post-Auth-Type REJECT
+	  stanza instead of skipping post-auth entirely.
+	* Added support for %{*:Packet-Type} translation. (Not for %{check:})
+	* Added support for %{check:Attribute-Name} to go with
+	  %{request:Attribute-Name} and the like.
+	* Add support to rlm_sql for post-authentication query execution.
+	
+FreeRADIUS 0.9.2 ; Date: 2003/10/14 19:00:09, urgency=low
+
+	* New rlm_ippool code to fix IP leaks
+	* New rlm_ippool_tool for manipulation of rlm_ippool databases
+
+	* Change radrelay to reject records without an Acct-Status-Type attribute
+	* Change rlm_counter to reject packets which predate last server reset
+	* Change version output to include GNU GPL information
+	* Change rlm_ldap to output bad search filters
+
+	* Fix compilation of various modules when not building with pthreads
+	* Fix segfault due to poorly initialised value in rlm_mschap
+	* Fix to only reject packets once
+	* Fix rlm_exec to work when wait=no
+	* Fix rlm_attr_filter to work in post-proxy (as intended)
+	* Fix rlm_sql to only try to load SQL drivers
+	* Fix to orrectly limit size of RADIUS packets
+	* Fix usage information to output to stdout when used with -h flag
+	* Fix configure to assume gethostbyname is BSD-Style on FreeBSD
+
+FreeRADIUS 0.9.1 ; Date: 2003/09/04 14:56:34, urgency=low
+
+	* Replicate-To-Realm is deprecated, and hence no longer documented
+	* Document rlm_detail support for authorize and post-auth sections
+	* Improve slightly MySQL accounting record SQL query
+	* Opaquefied CHAP-Challenge
+	* Add attributes to Nomadix dictionary
+	* Fix rlm_exec's parsing of non-attribute return values
+	* Fix for a segfault while reading config files
+	* Fix for a segfault regarding hostname lengths
+	* Fix for a segfault while reading deprecated config files
+	* Fix compilation of radiusd.c when threads are disabled
+	* Recover from inability to relay
+	* Stop complaining in error log when a system call is interrupted.
+	* Don't print binary CHAP-Passwords into the logs
+	* Successfully detect GNU dbm >= 1.8.1's dbm compatibility library
+	* Fix rlm_unix to deal with requests without a username
+	* Fix "uninmplemented function" crash in postgresql driver on -HUP
+	* Revert INTERVAL types to BIGINT in postgresql example schema
+	* Fix radrelay to notice when it's out of IDs
+	* Fix radrelay to correctly skip bad attributes
+	* Fix radrelay to not leak IDs when discarding packets
+	* Fix configure to correctly identify systems without SYSV or GNU-style
+	  gethostby{addr,name}_r.
+
+FreeRADIUS 0.9.0 ; Date: 2003/07/04 21:01:29, urgency=low
+
+	* Many, many, bug fixes and feature enhancements.
+	* radrelay now updates packet 'id' on retransmissions.
+	* More checks for thread-safe functions.
+	* Fix CHAP related buffer overflow (ouch!), thanks to Masao NISHIKU.
+	* Issue warnings if deprecated configuration files are used.
+	* rlm_passwd can now add items to the reply, request, or config items.
+	* The rlm_digest, rlm_exec, and rlm_ippool modules are now marked
+	  as 'stable', and included in the default build.
+	* Removed 'raduse'.  No one has used it for years.
+	* Massive fixes for Debian packaging.
+	* radclient can now send "disconnect" packets, to NASes which
+	  support it.  The server, however, CANNOT send disconnect packets.
+	* Made Auth-Type, Acct-Type, etc. names consistent across
+	  dictionary files and radiusd.conf.  The old (inconsistent) names
+	  are still allowed for backwards compatibility.
+	* Cleaned up problems with the rlm_sql module.
+	* Updates to the rlm_ldap module.
+	* rlm_mschap no longer reads SMB password files.  See rlm_passwd,
+	  instead.
+	* Changed default entry in the 'users' file to 'Auth-Type = System',
+	  to allow EAP and Digest authentication to work automagically.
+	* Support for Cisco LEAP.
+	* Added many new dictionaries (Extreme, Wispr, ERX, Netscreen...)
+	* Removed support for ATTRIB_NMC.  It is now handled (better)
+	  in a different manner.
+	* Dictionaries have been moved from /etc/raddb to /usr/share/freeradius
+	* Many documentation updates
+	* Ignore whitespace-only lines in the 'users' file.
+	* Patch to fix 'rlm_realm' from returning the DEFAULT entry when
+	  we are looking for the NULL entry and it doesn't exist. Bug
+	  noted by Nathan Miller.
+	* Disable child process spawning if we don't have threads.
+	  The code doesn't work, so it's better to force the server
+	  to run in single-process mode.
+	* New rlm_exec module, which allows a more generic way of
+	  executing external programs.
+	* Preliminary large file support in 'configure' and in the server,
+	  to support 2G+ detail files.
+	* Install documentation into /usr/local/share/doc/freeradius
+	* New/updated dictionaries for RedCreek, Bintec, Alcatel,
+	  ITK, Telebit, and Cabletron.
+	* Updates to allow building on MAC OSX.
+	* Add support for Acct-Type,Session-Type and PostAuth-Type
+	* Removed builddbm.  It hasn't been used for ages.
+	* Added new post_proxy section, based on patch from Chris Brotsos.
+	* rlm_counter shouldn't reset the counters on instantiation,
+	  if the reset is set to 'never'.
+	* Significant updates to the rlm_python and rlm_perl modules
+	* Fix the rlm_pap module to handle password lengths properly.
+	* Do SQL 'close' on bad sockets, to prevent descriptor leaks
+	* Case insensitivity option for rlm_radutmp
+	* New pseudo-round-robin load balancing for realms.
+	* Suppress empty SQL queries.
+	* Include strong PRNG
+	* Create 'snmp' configuration directive, so that we can disable
+	  SNMP at run time, even if it's built into the server.
+	* Refresh realm as 'active' when we see a response from it,
+	   Based on a patch by Angelos Karageorgiou.
+	* Don't core dump if Status-Server is received, but it's disabled.
+	* Support more variants of character fields in Oracle.
+	  Patch from Stocker Gernot.
+	* Better parsing of dictionary files.
+	* Alteon web switch dictionary, from Thomas Linden
+
+FreeRADIUS 0.8 ; Date: 2002/11/18 15:37:24, urgency=low
+
+	* Added Oracle-specific queries.
+	* Updated SQL queries to match schema.
+	* PostGreSQL reconnect patch.
+	* Added documentation on how to build on MAC OSX.
+	* Allowed SQL module to ignore unknown Acct-Status-Type values.
+	* Updated PostGreSQL queries and schema.
+	* Updated the log rotation configuration files.
+	* Colubris and updated Nomadix dictionaries, from Marko Myllynen.
+	* Normalized error messages from the SQL modules, so that they're
+	  more informative.
+	* Added Suse specific directory and configuration files, from
+	  Peter Nixon
+	* SQL fail-over patch, so that the module returns FAIL if
+	  the back-end database is down.  Based on a patch from
+	  Thomas Jalsovsky.
+	* Cleaned up the internal handling of the configuration
+	  information, in preparation for better handling SIGHUP.
+	* Updated rlm_krb5 configuration to better find it's libraries
+	  and include files.
+	* radclient now complains if it receives a reply from a machine
+	  other than the one to which it sent the request.
+	* Updated Postgresql SQL queries to get the operator, too.
+	* Added Juniper dictionary.
+	* Added Cisco VPN3000, VPN5000, and BBSM dictionaries.
+	* New platform-neutral 'rc.radiusd'
+	* Configuration files with private information get chmod'd
+	  0600 after installation.
+	* Preliminary support for clean shutdowns when a SIGTERM is
+	  received.
+	* SNMP timeouts for checkrad, so there will be fewer situations
+	  where it hangs for 30 seconds...
+	* Added code to clean up modules and memory when asked to exit
+	  via SIGTERM.
+	* Removed all need for the old-style 'naslist' and 'client' files,
+	  and noted that they are deprecated.
+	* Added support for Status-Server packets, stolen shamelessly
+	  from Cistron RADIUSD.  This is despite the RFC's saying such
+	  things are wrong.
+	* Bug fixes to rlm_dbm.
+	* Updates for checkrad, max40xx routine, from Aleksandr Kuzminsky.
+	* Disable caching of passwords for the Unix module.  It was
+	  causing too much confusion.
+	* Fix a memory leak when proxying Authentication-Request's
+	* Attributes which are not found in the dictionary are now of
+	  type 'octets', instead of 'string'.
+	* Support for "round-robin" load balancing, when proxying requests
+	  to multiple servers for one realm.
+	* Minor changes for better HPUX support.
+	* Updated the documentation and README's
+	* Made FreeTDS build ONLY after hand-editing, as the FreeTDS
+	  libraries are in a state of flux, due to active development.
+	* Fixes to help build the server on MAC OSX
+	* Cisco VPN 3000 dictionary, as posted to the list by Chris Deramus.
+	* Fix EAP problems with retransmission, from Rainer Weikusat.
+	* Updates to the Oracle module, from Andrea Gabellini.
+	* In xlat, Unix timestamps are unsigned ints.
+	* Security fixes for the Kerberos Module.
+	* New 'post-auth' section, to do additional processing of
+	  requests after they've been authenticated.
+	* doc/aaa.txt describes how the server works.
+	* More uniform encoding/decoding of passwords, so that they will
+	  be seen as clear-text where possible.
+	* radwho and radzap now read 'radiusd.conf' to discover where the
+	  radutmp files are located.  Patch from Andrea Gabellini.
+	* Preliminary 'expression' module, to allow you to do cool things
+	  like:    Session-Timeout = `%{expr:3600 - %{sql:SELECT ...}}`
+	* Added ability to do xlat on check items, and reply items,
+	  so that the value of the reply attributes can be dynamically
+	  generated.
+	* Added MIBs, taken from the RFC's.  This makes SNMP queries to
+	  the server a little easier to set up.
+	* Don't SEGV when we receive a packet which is larger than the
+	  size claimed in the RADIUS portion.  Patch from Vaughn Skinner.
+	* SNMP patches from Harrie Hazewinkel.
+	* Added Altiga dictionary, from Calum <calum.aug02@umtstrial.co.uk>
+	* New Rewrite-Rule for rlm_attr_rewrite, to selectively choose
+	  which rewrite rule is performed, and when.
+	* Minor bug fixes for radrelay.
+	* Bug fixes in SQL and sub-modules.
+	* Major updates to dialup_admin.
+	* Fixed handling of tagged string attributes, so that the server
+	  doesn't go off into never-never land.
+	* Cleaned up experimental rlm_smb, so that it builds on more
+	  platforms.
+	* Don't over-write request->reply->vps with the Reply-Message,
+	  when doing authentication rejects with Exec-Program-Wait.
+	* Added 'instantiate' section, so that modules like 'expr',
+	  with only an 'xlat' function can be registered.
+	* Allow '{' and '}' in xlat'd strings.
+	* C++ compatibility patch from Andrey Kotrekhov, for libradius.
+	* Automatically decrypt/encrypt User-Password, so that debugging
+	  mode will print out the text password, and not the random
+	  garbage it previously showed.
+	* Cleaned up header files and function prototypes for the SQL
+	  sub-modules.
+	
+FreeRADIUS 0.7 ; Date: 2002/07/26 18:01:50 , urgency=high
+
+	* Allow attributes of type 'date' to be sent in outgoing packets.
+	  Bug found by Loh John Wu <ljwu@sandvine.com>
+	* Add 'Realm' attribute, even if it's a LOCAL realm.
+	  Bug noted by Chris Brotsos.
+	* Added experimental SMB authentication module, which uses
+	  PAP passwords to authenticate against an NT-Domain.
+	  NT/LM-passwords are not currently supported.
+	* More documentation for rlm_passwd, rlm_mschap, and rlm_digest.
+	* 'configure' changes to better find sem_init and friends.
+	* Allow the use of previously installed libtool, and libltdl.
+	  This appears to help a lot on FreeBSD.
+	* Fixes to work on non-threaded builds.
+	  Patch from Rainer Weikusat.
+	* SQL now re-connects to the server, if the connection is lost.
+	  Currently only MySQL is fixed, but other patches will follow.
+	  Patch from Todd T. Fries.
+	* Added experimental use of dynamicly translated variables,
+	  CallBack-Number = `%{request:Calling-Station-Id}`
+	  sets the value of the CallBack-Number attribute to the value of
+	  the Calling-Station-Id in the original request.
+	* Cute hack: Allow regex matching on IP addresses, by placing
+	  the string representation of the IP address (1.2.3.4) into
+	  the internal data structure.  This allows things like
+	  NAS-IP-Address =~ "^192\.168", which may be useful.
+	* Add documentation for experimental rlm_dbm module.
+	* Added experimental Perl module.
+	* Added the relevant IETF RFC's (standards documents) to 'doc/rfc',
+	  along with some simple perl scripts to convert them to cross-
+	  referenced HTML.
+	* Updated the experimental Python module.
+	* Added Cisco SSG VSA's
+	* When rejecting authentication due to external Exec-Program, do
+	  NOT free the reply pairs, as the server core will take care of
+	  doing that.  Bug noted by Thomas Jalsovsky
+	* New experimental module: rlm_cram
+	  Supports APOP, CRAM-MD5, CRAM-MD4, CRAM-SHA1 with it's own
+	  VSA's. This module may be used for SMTP/POP3/IMAP4 server
+	  authentication.
+	* Make Exec-Program and Exec-Program-Wait work in debugging mode.
+	* Finalize the radrelay additions, based on Cistron RADIUS
+	  Patches from Simon <lists@routemeister.net>
+	* Fix issues with linking, by making libradius shared.
+	* Fix issues with MD4, MD5, SHA1, and use of OpenSSL
+	* Update rlm_x99_token module to compile.
+
+FreeRADIUS 0.6.0 ; Date: Date: 2002/07/03 14:16:33 , urgency=high
+
+	* Many bug fixes.  For explicit details, see:
+		http://www.freeradius.org/cvs-log/
+	* Change to the user/group specified in the config file in all
+	  modes ( debug and daemon ).
+	* SQL sockets are rotated so that all are used, to prevent the
+	  SQL server timing out and closing unused sockets.  Patch from
+	  Todd T. Fries
+	* Sybase driver from mattias@nogui.se.
+	* Modules are now versioned.
+	* Delete garbage Proxy-Reply attributes sent by the home server
+	  before performing our own reply.
+	* Fix race conditions when duplicate packets resulted in a request
+	  being processed by two threads, at the same time.
+	* Add '-d' command-line option to radwho
+	  Bug noted by Matthew Schumacher
+	* Corrected issue that when a home server never replied to a
+	  proxied request, the server may die.
+	* In SQL, look in radcheck, if not found there, try radgroupcheck.
+	  Patch from Thomas Jalsovsky.
+	* Set sql user name for ALIVE accounting packets, too.
+	  Patch from Simon <lists@routemeister.net>.
+	* Use port-specific checking for realms, now that we can proxy to
+	  different auth/acct servers for the same realms.
+	  Patch from Eddie Stassen.
+	* Minor updates to encrypted tunnel passwords.
+	* Default 'run_dir' is now /var/run/radiusd, not var/run.
+	  /var/run is writeable only by root, and radiusd may be run suid.
+	* Modules are now versioned, so that upgrading the server
+	  ensures that the new modules are installed.
+	* Fix sql code, so that magic SQL characters don't get the
+	  SQL server excited.
+	* Remove references to "UNKNOWN-NAS" in log messages.
+	* Properly handle fork() and obtaining child processes exit
+	  status when using threads.  (pthread is broken w.r.t. signals)
+	* Correct code which would send erroneous reject, when the reject
+	  was delayed, and a new request came in.
+	* Fix race condition where proxied requests would sometimes never
+	  be re-sent.  Bug noted by Eddie Stassen.
+	* Corrected LDAP3 schema
+	* Implemented Digest authentication, as per IETF document
+	  draft-sterman-aaa-sip-00.txt, to perform authentication against
+	  a Cisco SIP server.
+	* If no password or group files have been specified in the config,
+	  use the standard system calls to find them, rather than giving
+	  up.  Patch from Steve Langasek.	
+	* Return Proxy-State attributes in a delated Access-Reject
+	* Corrected 'session zap' logic, when an old and unused session
+	  is deleted from the databases.  Accounting packets with garbage
+	  Client-IP-Address attributes should no longer be a problem.
+	* Bug fixed in LDAP attribute map, for MS-CHAP related attributes.
+	* Fixes to the EAP module to work better with XP.
+	* Support for MS-SQL, using the FreeTDS library,
+	  from Dmitri Ageev
+	* New operators =* and !*.  See 'man 5 users' for details.
+	* Added translation for %{config:section.subsection.item}, to
+	  allow run-time translation of internal configuration parameters.
+	* New rlm_sqlcounter module, to keep counters based on SQL data.
+	* Fix rlm_realm, to allow seperate proxying of accounting and
+	  authentication requests.
+	* Bug fixes in PostgreSQL back-end, from Andrew Kukhta.
+	* Increase internal buffers, to allow large SQL query strings.
+	* Added debug level 3 (-xxx), where debug messages have time stamps.
+	* Fix 'radwho' to use the correct radutmp file, as found by
+	  'configure' (but radwho still doesn't read radiusd.conf)
+	* Fix bugs in tunnel (tagged attribute) code, which would prevent
+	  tagged attributes from being generated correctly in a packet.
+	* Build only 'stable' modules by default.  Experimental modules
+	  require --with-experimental-modules to be passed to 'configure'
+	* New module rlm_ippool, to do server-side IP pooling.
+	* Fix rlm_eap module for portability, to work on non-x86 platforms.
+	* Re-connect to the LDAP server if the connection idles out
+	* Increased the visibility of the warning messages when doing
+	  'make install'
+	* Fixed EAP module to use 16-bit integers, so that it will
+	  work on big-endian architectures.
+	
+FreeRADIUS 0.5.0 ; Date: 2002/03/14 22:18:22, urgency=medium
+
+	* Many bug fixes.  For explicit details, see:
+		http://www.freeradius.org/cvs-log/
+	* Added Foundry dictionary, from Thomas Keitel
+	* Fix a logic bug in the 'walk over request list' code, which
+	  would sometimes result in a request being deleted while it
+	  was still being processed.  Found by Rainer Clasen
+	* New 'tuning' guide, for optimizing the server's speed.
+	* The default ports are now 1812/1813, which is the standard.
+	* Fix a bug which would hang the server when many SQL connections
+	  were open.  Found by Cvetan Ivanov <zezo@spnet.net>
+	* Updated MySQL schema, with sanity checks, based on a schema from
+	  Thomas Huehn <huehn@eozaen.net>
+	* Added 'Aptis' (Nortel CVX) dictionary.
+	* Added Ipv6 attributes (as 'octets' type for now)
+	* 'xlat' capability for SQL, so other modules can do SQL queries.
+	* We don't need a shared secret for LOCAL realms.
+	* Added better description of internal variables.
+	* Configurable fail-over to DEFAULT realm.  Sometimes we don't
+	  want to use the DEFAULT realm, if all configured realms are
+	  marked dead.  From Rainer Clasen.
+	* new configuration items 'max_attributes' and 'reject_delay'
+	  If the packet contains too many attributes, it can be rejected.
+	  We can also delay sending an Access-Reject, which slows down
+	  certain DoS attacks.
+	* Updates to redhat scripts and spec file, from Marko Myllynen.
+	* Python module (EXPERIMENTAL) from migs paraz <mparaz@yahoo.com>
+	* Add ability to find *best* match when comparing attributes.
+	  If there is more than one attribute in a request and the first
+	  one doesn't match, go check the second one, instead of failing.
+	* unixODBC support for SQL, from Dmitri Ageev <d_ageev@ortcc.ru>
+	* Use thread-safe versions of library calls.  This work is still
+	  on-going.
+	* New rlm_passwd module, to allow general parsing of passwd-style
+	  files.
+	* Preliminary EAP-TLS support.
+	* Updated LDAPv3 schema
+	* Correct checks for Odbc, and fix bugs in the module.
+	  Andreas Kainz <aka@maxxio.at>
+	* MAN page fixes and updates
+	* Added PHP web interface 'dialup_admin'
+	* Password = "UNIX" or "PAM" backwards compatibility removed.
+	* Use the operators in the SQL schema and queries, and bug
+	  fixes in the SQL module.
+	  Randy Moore <ramoore@axion-it.net>
+	* fgetpwent() compatibility, for systems without it,
+	  from Daniel Carroll <freeradius@defiant.mesastate.edu>
+	* Added PAP authentication module, as a step to removing
+	  most authentication handlers in other modules.
+	* Send a Access-Reject after max_request_time
+	* Multiple fixes in the LDAP module.
+	* Quintum dictionary by Jeremy McNamara <jj@indie.org>
+	* Preliminary EAP Module with MD5 support
+	  Contributed by Raghu <raghud@hereuare.com>
+	* Better sanity checking for bad VSA's when receiving a packet
+	* new 'xlat register' so that attribute values may be pulled
+	  out of configurable databases at run-time.
+	  e.g. %{ldap:ldap:///dc=company,dc=com?uid?sub?uid=%u}
+	* Minor fixes to debian package rules
+	* Attribute 'Password' deprecated in favor of 'User-Password'.
+	* MS-CHAP and MS-CHAPv2 MPPE support added.
+	  Contributed by Takahiro Wagatsuma <waga@sic.shibaura-it.ac.jp>.
+	* X9.9 token enhancements (several).
+
+  --  Alan DeKok <aland@ox.org>
+
+FreeRADIUS 0.4.0 ; urgency=low
+
+	* Allow the MS-CHAP module to work, and to read /etc/smbpass
+	  3APA3A <3APA3A@SECURITY.NNOV.RU>
+	* Remove the server requirement that one of User-Password
+	  or CHAP-Password exist when doing authentication.  These
+	  checks should be handled by the modules.  This change
+	  also prepares us for EAP.
+	  Patch from Raghu <raghud@hereuare.com>
+	* Make NAS-Port-ID in radwho, raduse, etc. unsigned,
+	  instead of signed.
+	  Patch from John Morrissey <jwm@horde.net>
+	* Allow \t and \n inside of configuration strings.
+	  Frank Cusack <fcusack@fcusack.com>
+	* X9.9 Challenge-Response token card support.
+	  For now, only CRYPTOCard tokens are supported.
+	  Frank Cusack <fcusack@fcusack.com>
+	* Fix core dump on Solaris in radwho.c
+	  Patch from Eddie Stassen <eddies@saix.net>
+	* Fix leak / core dump in Oracle module.
+	* Fix memory leak in rlm_counter
+	  Kostas Kalevras <kkalev@noc.ntua.gr>
+	* "LOCAL" realms do not need to have an entry in the 'clients'
+	  file.  Philippe Levan <levan@epix.net>
+
+  --  Alan DeKok <aland@ox.org>
+
+FreeRADIUS 0.3.0 ; urgency=low
+
+	* Added ability to send debug messages to the log file, when
+	  running in daemon mode.
+	* Miscellaneous fixes to get Debian packaging working.
+	* When trapping a signal, don't SIGKILL children on a SIGTERM,
+	  SIGTERM them, instead.  This allows Exec-Program scripts to
+	  catch the signal, and finish processing, instead of dying.
+	  Bug noted by Michael Chernyakhovsky <magmike@mail.ru>
+	* Increased limit on length of user name read from /etc/passwd,
+	  to match the maximum allowed by RADIUS.
+	  Bug noted by "Gonzalez B., Fernando" <fgonzalez@manquehue.cl>
+	* Configurable fail-over when proxying packets.  If the
+	  home server doesn't respond to a repeated proxied request,
+	  it's marked as 'dead', and the next one in the list is used.
+	  Patch by Eddie Stassen <eddies@saix.net> and <spirn@21cn.com>
+	* Pass Access-Challenge attributes through the server, in
+	  preparation for EAP.
+	  Raghu <raghud@hereuare.com>
+	* More fixes for RFC compliance on the Message-Authenticator
+	  Raghu <raghud@hereuare.com>
+	* Merged OSFC2/OSFSIA authentication patches from Cistron.
+	  (Bug # 104)  The patches are not well tested, however.
+	* IBM DB2 UDB V7.1 SQL driver, contributed by
+	  Joerg Wendland <wendland@scan-plus.de>
+	* Fix the IP + Port address assignment.
+	  Bug found by "John Padula" <john_padula@aviancommunications.com>
+	* Patch to avoid smashing the contents of Ascend binary filters.
+	  Michael Chernyakhovsky <magmike@mail.ru>
+	* Create and Validate Message-Authenticator attribute, in
+	  preparation for EAP.
+	* Initialize variables properly in rlm_attr_filter.
+	  Patch from Andriy I Pilipenko <bamby@marka.net.ua>
+	* Renamed RedHat init script from 'radiusd.init' to 'radiusd'.
+	  This allows it to work properly with the RedHat rc system.
+	  Patch from Christian Vogel <chris@amor.iksys.de>
+	* Fix the configure script checks for PostgreSQL, so that
+	  they use the 'test' command properly.
+	  Bug found by Robert Haskins <rhaskins@ziplink.net>
+	* Change instances of 'assert' to 'rad_assert', so that it
+	  can log the error to the standard radius log files.
+	  Patch from Vesselin Atanasov <vesselin@bgnet.bg>
+	* Patch to prevent segv when freeing results, from
+	  Tomas Heredia <tomas@intermediasp.com>
+	* Added support for Exec-Program to acct.  Bug found by
+	  <magmike@mail.ru>
+	* Corrected rlm_files so that raddb/acct_users works
+        * When doing synchronous proxying, update proxy next try
+	  entries, so that the server doesn't eat CPU time.
+	  Raghu <raghud@hereuare.com>
+	* Add primitive dictionary.nomadix <CBoyd@apogeetelecom.com>
+	* Log messages to console, if the logger hasn't been
+	  initialized.  <vesselin@bgnet.bg>
+	* Log invalid user for proxy rejects, too. <help@visp.net>
+	* Fixed Expiration attribute handling.
+	* Added code to handle Ascend-Send-Secret and Ascend-Receive-Secret
+	* Removed non thread-pool code.  If we have threads, we now force
+	  the use of thread pools.
+	* Update version number
+	* correct bug where proxied accounting packets would never have a
+	  reply sent back to the NAS, or the reply would be sent twice.
+
+  --  Alan DeKok <aland@ox.org>
+	
+FreeRADIUS Alpha 0.2.0, July 30, 2001.
+
+	* call openlog() again when using PAM, to get the correct log
+	facility.
+	* Update child thread code, to minimize race conditions.
+	* Make thread pools the default.  Using plain child threads is NOT
+	recommended.
+	* Ignore SIGPIPE to get ride of crashes when using ldap.
+	* Update proxying code to work better.
+	* Platform independent pthread_cancel()ling
+	* Fix 'unresponsive child pid' erroneous warning messages.
+	* Many changes to get various SQL modules working.
+	Note that there may still be some issues with Oracle.
+	* Added configure options 'with-rlm-FOO-include/lib-dir', so that
+	lower-level rlm_FOO modules can be configured via the top-level
+	configuration file.  This isn't completely done yet.
+	* Fix check for shared library using libtool info, instead of
+	assuming extension being ".so".
+	* Fixes for HPUX.  We probably need more.
+	* Many additional bug fixes and changes.

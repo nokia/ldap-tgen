@@ -1,0 +1,15 @@
+#!/bin/sh
+# /usr/local/lib/sa/sa2.sh
+# (C) 1999-2004 Sebastien Godard (sysstat <at> wanadoo.fr)
+#
+S_TIME_FORMAT=ISO ; export S_TIME_FORMAT
+umask 0022
+DATE=`date  +%d`
+RPT=/var/log/sa/sar${DATE}
+ENDIR=/usr/local/bin
+DFILE=/var/log/sa/sa${DATE}
+[ -f "$DFILE" ] || exit 0
+cd ${ENDIR}
+${ENDIR}/sar $* -f ${DFILE} > ${RPT}
+find /var/log/sa \( -name 'sar??' -o -name 'sa??' \) -mtime +7 -exec rm -f {} \;
+

@@ -1,0 +1,30 @@
+Here are the things I would like (or I should) do for the next releases:
+
+* Add a vmstat command (not sure about this, since it already exists in common
+  Linux distributions).
+
+* Add more statistics to sar and mpstat (and iostat) when available in Linux
+  kernels.
+  Numerous network activities are already available (see /proc/snmp for
+  example), but I am rather reluctant to display them: There are too many of
+  them and sar becomes bigger and bigger...
+
+* Add new fields to sar -d: avgrq-sz and avgqu-sz.
+
+* Try to add new fields to sar -B and sar -W (pgscan, pgfree, pgsteal, etc.).
+
+* Use autoconf to configure sysstat.
+
+* Add support for hotplug CPU ?
+
+* Dynamically allocate structures for IRQs (just like for CPUs).
+
+* Check I/O wait type (long int?, int?) read in /proc/stat and in /sys/.../stat.
+
+* Cast cpu stats (user, nice, system) for sar, iostat and mpstat to unsigned
+  long instead of unsigned int (Greg Edwards <edwardsg [at] sgi.com>).
+  Idem for other stats.
+
+* Handle little/big endian architectures for sar daily data files
+  (Ferenci Daniel <Daniel.Ferenci [at] siemens.com>).
+

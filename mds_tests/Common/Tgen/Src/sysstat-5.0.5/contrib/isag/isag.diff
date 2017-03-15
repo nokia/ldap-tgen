@@ -1,0 +1,66 @@
+--- isag.old	Wed May 19 20:49:05 2004
++++ isag	Wed May 19 20:56:21 2004
+@@ -273,7 +273,7 @@
+ 
+ # following check added: Thu Mar 18 21:44:52 GMT+1 2004
+ if { 1 != [file executable $sar]} {
+-	out_msg "Error" "File: $sar does not exists"
++	out_msg "Error" "File: $sar does not exist"
+ 	exit 
+ }
+ 
+@@ -1308,7 +1308,9 @@
+ 		return
+ 	}
+ 
+-	set nlines [sag_prepare_datafile $l]
++	set prepared [sag_prepare_datafile $l]
++	set nlines  [lindex $prepared 0]
++	set fgrname [lindex $prepared 1]
+ 
+ # at least two lines of data
+ 	if {$nlines > 1} {
+@@ -1323,22 +1325,25 @@
+ 		} else {
+ 			set yrange ""
+ 		}
+-		create_gnuplot_file jpeg jpg [fngr $l] "$view_n($l)" \
++
++		set fngr [exec mktemp "/tmp/isag.XXXXXX"]
++		create_gnuplot_file jpeg jpg $fngr "$view_n($l)" \
+ 			"$xlabel" \
+ 			"$ylabel($l)" $y2label($l) \
+-			"$yrange" \
+-			"$plotstr($l)" $sag_opt_grid
++			$yrange \
++			[strrep "$plotstr($l)" __FNGR__ $fgrname] $sag_opt_grid
+ 
+-		exec $gnuplot [fngr $l].gp
++		exec $gnuplot $fngr.gp
+ 
+-		file delete [fngr $l].gp
+-		file rename -force [fngr $l].jpg $sag_if_archive.$l.jpg
++		file delete $fngr.gp
++		file delete $fngr
++		file rename -force $fngr.jpg $sag_if_archive.$l.jpg
+ 
+ 	} else {
+ 		.graph.canv delete all
+ 		out_msg "Datafile: sag_if_archive" "No data to show"
+ 	}
+-	file delete [fngr $l]
++	file delete "$fgrname"
+ 
+ 	unset nlines 
+ }
+@@ -1412,10 +1417,6 @@
+ 	
+ 	close $fp
+ 
+-	foreach ndx [array names fngr_files] {
+-				file delete $fngr_files($ndx)
+-	}
+-	
+ 	destroy .
+ 	exit
+ }

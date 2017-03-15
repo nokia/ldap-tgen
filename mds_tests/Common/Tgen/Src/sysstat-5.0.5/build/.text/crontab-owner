@@ -1,0 +1,5 @@
+
+This is the user the crontab will belong to. Be careful that his original
+crontab file will be replaced (after being saved in sysstat directory).
+I normally use the adm user here, although you could prefer root.
+

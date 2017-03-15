@@ -1,0 +1,8 @@
+User-Name = "eapsim"
+EAP-MD5-Password = "mypassissim"
+NAS-IP-Address = marajade.sandelman.ottawa.on.ca
+EAP-Code = 2
+EAP-Id = 56
+EAP-Type-Identity = "eapsim"
+Message-Authenticator = 0
+NAS-Port = 0

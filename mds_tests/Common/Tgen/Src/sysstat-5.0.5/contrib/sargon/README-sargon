@@ -1,0 +1,61 @@
+Subject: sargon: A replacement script for sa1/sa2
+Date: Thu, 4 Apr 2002 16:25:41 -0800 (PST)
+From: John Caruso <caruso@paradiso.umuc.edu>
+To: sebastien.godard@wanadoo.fr
+
+
+Sebastien,
+
+I've been using a replacement script for sa1/sa2 for several years now.
+Instead of maintaining a flat structure of logfiles under /var/log/sa, it
+keeps the logfiles organized by month (so that there can be more than one
+month's worth of data on the system), and it also maintains a set of
+symbolic links to mimic the standard datafile structure.  The directory
+structure that results under /var/log/sa looks like this:
+
+   drwxr-xr-x    2 root     root         4096 Feb 28 00:00 200202
+   drwxr-xr-x    2 root     root         4096 Mar 31 00:00 200203
+   drwxr-xr-x    2 root     root         4096 Apr  4 00:00 200204
+   -rw-r--r--    1 root     root            0 Apr  4 03:00 LASTMAINT
+   lrwxrwxrwx    1 root     root           11 Apr  1 23:55 sa01 -> 200204/sa01
+   lrwxrwxrwx    1 root     root           11 Apr  2 23:55 sa02 -> 200204/sa02
+   lrwxrwxrwx    1 root     root           11 Apr  3 23:55 sa03 -> 200204/sa03
+   lrwxrwxrwx    1 root     root           11 Apr  4 16:10 sa04 -> 200204/sa04
+   lrwxrwxrwx    1 root     root           11 Mar  5 23:55 sa05 -> 200203/sa05
+   lrwxrwxrwx    1 root     root           11 Mar  6 23:55 sa06 -> 200203/sa06
+   [...etc...]
+
+This is very useful in situations where you need to be able to go back a
+few months to compare current performance to a previous baseline.  The
+script takes care of deleting old datafiles, and it will also compress old
+datafiles after a specified amount of time (default is to keep 400 days
+worth of datafiles, and compress after 180 days).  You run it periodically
+just as you would sa1 (and there's no longer a need to run sa2).
+
+It was originally written for Solaris systems, but I recently modified it
+so that I could use it on Redhat systems as well.  Since you maintain the
+sysstat package, I thought you might be interested in it.
+
+- John
+
+
+ADDITIONAL NOTES:
+-----------------
+
+I have modified the original sargon script written by John.
+It must be called now as:
+
+sargon [interval] [count] [days-to-keep] [days-to-keep-uncompressed]
+
+You can put the following line in your crontab:
+
+0 * * * * /usr/local/lib/sa/sargon 600 6 180 10 &
+
+Note that the LINUX RESTART message is not included in
+the daily data file if you use sargon instead of the
+sa1/sa2 scripts. To fix this, you will have to update
+the sysstat.sh script, which should be pretty easy.
+
+--
+Sébastien Godard (sysstat <at> wanadoo.fr)
+

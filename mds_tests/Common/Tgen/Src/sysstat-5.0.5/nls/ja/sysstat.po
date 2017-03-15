@@ -1,0 +1,272 @@
+# NLS support for the sysstat package.
+# Copyright (C) 1999 Free Software Foundation, Inc.
+# Sebastien GODARD <sebastien.godard@wanadoo.fr>, 1999.
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: sysstat 5.0.4\n"
+"PO-Revision-Date: 2004-05-22 20:17\n"
+"Last-Translator: Hideki Yamane <henrich@samba.gr.jp>\n"
+"Language-Team: Japanese <henrich@samba.gr.jp>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=EUC-JP\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: mpstat.c:62
+msgid "sysstat version %s\n"
+"(C) Sebastien Godard\n"
+"Usage: %s [ options... ] [ <interval> [ <count> ] ]\n"
+"Options are:\n"
+"[ -P { <cpu> | ALL } ] [ -V ]\n"
+msgstr "sysstat version %s\n"
+"(C) Sebastien Godard\n"
+"使い方: %s [ オプション... ] [ < 間隔 > [ < 回数 > ] ]\n"
+"オプション:\n"
+"[ -P { <cpu> | ALL } ] [ -V ]\n"
+
+#: mpstat.c:207
+msgid "\n%-11s  CPU   %%user   %%nice %%system %%iowait    %%irq   %%soft   %%idle    intr/s\n"
+msgstr "\n%-11s  CPU   %%user   %%nice %%system %%iowait    %%irq   %%soft   %%idle    intr/s\n"
+
+#: mpstat.c:216
+msgid "%-11s  all"
+msgstr "%-11s  all"
+
+#: iostat.c:73
+msgid "sysstat version %s\n"
+"(C) Sebastien Godard\n"
+"Usage: %s [ options... ] [ <interval> [ <count> ] ]\n"
+"Options are:\n"
+"[ -c | -d ] [ -k ] [ -t ] [ -V ] [ -x ]\n"
+"[ { <device> [ ... ] | ALL } ] [ -p [ { <device> | ALL } ] ]\n"
+msgstr "sysstat バージョン %s\n"
+"(C) Sebastien Godard\n"
+"使い方: %s [ オプション... ] [ < 間隔 > [ < 回数 > ] ]\n"
+"オプション:\n"
+"[ -c | -d ] [ -k ] [ -t ] [ -V ] [ -x ]\n"
+"[ { < デバイス > [ ... ] | ALL } ] [ -p [ { < デバイス > | ALL } ] ]\n"
+
+#: iostat.c:534
+msgid "avg-cpu:  %%user   %%nice    %%sys %%iowait   %%idle\n"
+msgstr "CPU平均:  %%user   %%nice    %%sys %%iowait   %%idle\n"
+
+#: iostat.c:555
+msgid "Time: %s\n"
+msgstr "時間: %s\n"
+
+#: iostat.c:400
+msgid "Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn\n"
+msgstr "デバイス:          tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn\n"
+
+#: iostat.c:617
+msgid "Device:            tps   Blk_read/s   Blk_wrtn/s   Blk_read   Blk_wrtn\n"
+msgstr "デバイス:          tps   Blk_read/s   Blk_wrtn/s   Blk_read   Blk_wrtn\n"
+
+#: iostat.c
+msgid "Device:    rrqm/s wrqm/s   r/s   w/s  rsec/s  wsec/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await  svctm  %%util\n"
+msgstr "デバイス:  rrqm/s wrqm/s   r/s   w/s  rsec/s  wsec/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await  svctm  %%util\n"
+
+#: iostat.c
+msgid "-x and -p options are mutually exclusive\n"
+msgstr "-x と -p オプションは相互に排他的です\n"
+
+#: sar.c:91
+msgid "sysstat version %s\n"
+"(C) Sebastien Godard\n"
+"Usage: %s [ options... ] [ <interval> [ <count> ] ]\n"
+"Options are:\n"
+"[ -A ] [ -b ] [ -B ] [ -c ] [ -d ] [ -H ] [ -h ] [ -i <interval> ] [ -q ]\n"
+"[ -r ] [ -R ] [ -t ] [ -u ] [ -v ] [ -V ] [ -w ] [ -W ] [ -y ]\n"
+"[ -I { <irq> | SUM | ALL | XALL } ] [ -P { <cpu> | ALL } ]\n"
+"[ -n { DEV | EDEV | SOCK | FULL } ]\n"
+"[ -x { <pid> | SELF | ALL } ] [ -X { <pid> | SELF | ALL } ]\n"
+"[ -o [ <filename> ] | -f [ <filename> ] ]\n"
+"[ -s [ <hh:mm:ss> ] ] [ -e [ <hh:mm:ss> ] ]\n"
+msgstr "sysstat バージョン %s\n"
+"(C) Sebastien Godard\n"
+"使い方: %s [ オプション... ] [ < 間隔 > [ < 回数 > ] ]\n"
+"オプション:\n"
+"[ -A ] [ -b ] [ -B ] [ -c ] [ -d ] [ -H ] [ -h ] [ -i < 間隔 > ] [ -q ]\n"
+"[ -r ] [ -R ] [ -t ] [ -u ] [ -v ] [ -V ] [ -w ] [ -W ] [ -y ]\n" 
+"[ -I { <irq> | SUM | ALL | XALL } ] [ -P { <cpu> | ALL } ]\n" 
+"[ -n { DEV | EDEV | SOCK | FULL } ]\n" 
+"[ -x { <pid> | SELF | ALL } ] [ -X { <pid> | SELF | ALL } ]\n"
+"[ -o [ < ファイル名 > ] | -f [ < ファイル名 > ] ]\n"
+"[ -s [ <hh:mm:ss> ] ] [ -e [ <hh:mm:ss> ] ]\n"
+
+#: sar.c:184
+msgid "Not an SMP machine...\n"
+msgstr "SMP なマシンではありません...\n"
+
+#: sar.c:194
+msgid "Not that many processors!\n"
+msgstr "そんなにCPUはありません!\n"
+
+#: sar.c:284
+msgid "Error while reading system activity file: %s\n"
+msgstr "システム動作情報ファイルの読み込み中にエラーが起きました: %s\n"
+
+#: sar.c:288
+msgid "End of system activity file unexpected\n"
+msgstr "システム動作情報ファイルが途中で予期無く終了しました\n"
+
+#: sar.c:402
+msgid "Cannot open %s: %s\n"
+msgstr "%s を開けません: %s\n"
+
+#: sar.c:521
+msgid "Invalid system activity file: %s\n"
+msgstr "システム動作情報ファイルの形式が正しくありません: %s\n"
+
+#:
+msgid "Invalid data format\n"
+msgstr "データ形式が正しくありません\n"
+
+#: sar.c:
+msgid "Average:"
+msgstr "平均値:"
+
+#: sar.c:568
+msgid "Requested activities not available in file\n"
+msgstr "要求された動作情報はファイル内にありません\n"
+
+#: sar.c:797
+msgid "Cannot write system activity file header: %s\n"
+msgstr "システム動作情報ファイルのヘッダに書き込みができません: %s\n"
+
+#: sar.c:850
+msgid "  i%03d/s"
+msgstr "  i%03d/s"
+
+#: sar.c:970
+msgid "Cannot write data to system activity file: %s\n"
+msgstr "システム動作情報ファイルに書き込みができません: %s\n"
+
+#: sar.c
+msgid "\n%-11s       DEV       tps  rd_sec/s  wr_sec/s\n"
+msgstr "\n%-11s       DEV       tps  rd_sec/s  wr_sec/s\n"
+
+#: sar.c
+msgid "\n%-11s   runq-sz  plist-sz   ldavg-1   ldavg-5  ldavg-15\n"
+msgstr "\n%-11s   runq-sz  plist-sz   ldavg-1   ldavg-5  ldavg-15\n"
+
+#: sar.c:1043
+msgid "\n%-11s    proc/s\n"
+msgstr "\n%-11s    proc/s\n"
+
+#: sar.c:1053
+msgid "\n%-11s   cswch/s\n"
+msgstr "\n%-11s   cswch/s\n"
+
+#: sar.c:1063
+msgid "\n%-11s       CPU     %%user     %%nice   %%system   %%iowait     %%idle\n"
+msgstr "\n%-11s       CPU     %%user     %%nice   %%system   %%iowait     %%idle\n"
+
+#: sar.c:1066
+msgid "%-11s       all"
+msgstr "%-11s       all"
+
+#: sar.c:1074
+msgid "Please give a smaller interval value\n"
+msgstr "間隔にはもっと小さな値を指定してください\n"
+
+#: sar.c:1121
+msgid "\n%-11s      INTR    intr/s\n"
+msgstr "\n%-11s      INTR    intr/s\n"
+
+#: sar.c:1125
+msgid "%-11s       sum"
+msgstr "%-11s       sum"
+
+#: sar.c:1149
+msgid "\n%-11s  pgpgin/s pgpgout/s   fault/s  majflt/s\n"
+msgstr "\n%-11s  pgpgin/s pgpgout/s   fault/s  majflt/s\n"
+
+#: sar.c:1163
+msgid "\n%-11s  pswpin/s pswpout/s\n"
+msgstr "\n%-11s  pswpin/s pswpout/s\n"
+
+#: sar.c:1177
+msgid "\n%-11s       tps      rtps      wtps   bread/s   bwrtn/s\n"
+msgstr "\n%-11s       tps      rtps      wtps   bread/s   bwrtn/s\n"
+
+#: sar.c:1206
+msgid "\n%-11s   frmpg/s   bufpg/s   campg/s\n"
+msgstr "\n%-11s   frmpg/s   bufpg/s   campg/s\n"
+
+#: sar.c:1234
+msgid "\n%-11s       PID  minflt/s  majflt/s     %%user   %%system   nswap/s"
+msgstr "\n%-11s       PID  minflt/s  majflt/s     %%user   %%system   nswap/s"
+
+#: sar.c:1234
+msgid "   CPU\n"
+msgstr "   CPU\n"
+
+#: sar.c:1269
+msgid "\n%-11s      PPID cminflt/s cmajflt/s    %%cuser  %%csystem  cnswap/s\n"
+msgstr "\n%-11s      PPID cminflt/s cmajflt/s    %%cuser  %%csystem  cnswap/s\n"
+
+#: sar.c:1331
+msgid "\n%-11s       TTY   rcvin/s   xmtin/s\n"
+msgstr "\n%-11s       TTY   rcvin/s   xmtin/s\n"
+
+#: sar.c:1351
+msgid "\n%-11s kbmemfree kbmemused  %%memused kbbuffers  kbcached kbswpfree kbswpused  %%swpused  kbswpcad\n"
+msgstr "\n%-11s kbmemfree kbmemused  %%memused kbbuffers  kbcached kbswpfree kbswpused  %%swpused  kbswpcad\n"
+
+#: sar.c:1389
+msgid "\n%-11s  CPU"
+msgstr "\n%-11s  CPU"
+
+#: sar.c:1419
+msgid "Not reading from a system activity file (use -f option)\n"
+msgstr "システム動作情報ファイルの読み込みがありません (-f オプションを使ってください)\n"
+
+#: sar.c:1447
+msgid "\n%-11s dentunusd   file-sz  inode-sz  super-sz %%super-sz  dquot-sz %%dquot-sz  rtsig-sz %%rtsig-sz\n"
+msgstr "\n%-11s dentunusd   file-sz  inode-sz  super-sz %%super-sz  dquot-sz %%dquot-sz  rtsig-sz %%rtsig-sz\n"
+
+#: sar.c:1493
+msgid "\n%-11s     IFACE   rxpck/s   txpck/s   rxbyt/s   txbyt/s   rxcmp/s   txcmp/s  rxmcst/s\n"
+msgstr "\n%-11s     IFACE   rxpck/s   txpck/s   rxbyt/s   txbyt/s   rxcmp/s   txcmp/s  rxmcst/s\n"
+
+#: sar.c:1524
+msgid "\n%-11s    totsck    tcpsck    udpsck    rawsck   ip-frag\n"
+msgstr "\n%-11s    totsck    tcpsck    udpsck    rawsck   ip-frag\n"
+
+#: sar.c:1533
+msgid "\n%-11s     IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s\n"
+msgstr "\n%-11s     IFACE   rxerr/s   txerr/s    coll/s  rxdrop/s  txdrop/s  txcarr/s  rxfram/s  rxfifo/s  txfifo/s\n"
+
+#: sar.c:1606
+msgid "\n%-11s       LINUX RESTART\n"
+msgstr "\n%-11s       LINUX は再起動しました\n"
+
+#: sar.c:1610
+msgid "-f and -o options are mutually exclusive\n"
+msgstr "-f と -o オプションは相互に排他的です\n"
+
+#: sar.c:1846
+msgid "Requested activities not available\n"
+msgstr "要求された動作情報は利用できません\n"
+
+#: sadc.c:74
+msgid "sysstat version %s\n"
+"(C) Sebastien Godard\n"
+"Usage: %s [ options... ] [ <interval> [ <count> ] ] [ <outfile> ]\n"
+"Options are:\n"
+"[ -x <pid> ] [ -X <pid> ] [ -F ] [ -I ] [ -V ]\n"
+msgstr "sysstat バージョン %s\n"
+"(C) Sebastien Godard\n"
+"使い方: %s [ オプション... ] [ < 間隔 > [ < 回数 > ] ] [ < 出力ファイル > ]\n"
+"利用可能なオプション:\n"
+"[ -x <pid> ] [ -X <pid> ] [ -F ] [ -I ] [ -V ]\n"
+
+#: sadc.c:614
+msgid "Cannot append data to that file\n"
+msgstr "ファイルにデータを追加できません\n"
+
+#: common.c:91
+msgid "Cannot handle so many processors!\n"
+msgstr "そんなに大量のプロセッサは扱えません!\n"

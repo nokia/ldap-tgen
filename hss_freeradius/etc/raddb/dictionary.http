@@ -1,0 +1,23 @@
+#
+#  dictionary.http
+#
+#	For extended HTTP Digest authentication
+#	From E. Anthoine
+#
+# Version:	1
+#
+
+ATTRIBUTE	Digest-Response						206 string  # string of 2 * MD5LENGTH length
+ATTRIBUTE	Digest-Attributes						207 string  # can be present more than once
+
+# Unofficial code to detect subattributes
+ATTRIBUTE	Digest-Attributes-Realm				208 string  # quoted-string
+ATTRIBUTE	Digest-Attributes-Nonce				209 string  # quoted-string
+ATTRIBUTE	Digest-Attributes-Method			210 string  # quoted-string
+ATTRIBUTE	Digest-Attributes-Uri				211 string  # quoted-string
+ATTRIBUTE	Digest-Attributes-Qop				212 string  # quoted-string
+ATTRIBUTE	Digest-Attributes-Algorithm		213 string  # quoted-string
+ATTRIBUTE	Digest-Attributes-BodyDigest		214 string  # string of 32 digits
+ATTRIBUTE	Digest-Attributes-CNonce			215 string  # quoted-string
+ATTRIBUTE	Digest-Attributes-NonceCount		216 string  # string of 8 digits
+ATTRIBUTE	Digest-Attributes-UserName			217 string  # quoted-string

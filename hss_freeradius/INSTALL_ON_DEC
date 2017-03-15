@@ -1,0 +1,91 @@
+#
+# EmA,26/11/2003
+#
+# Installation process in /hss_freeradius VOB of version snapshot_16/11/2003 (with EAP/SIM)
+#
+
+- clean preceding configures: rm config.cache
+
+- launch: ./configure --exec-prefix=/hss_freeradius/dec --prefix=/hss_freeradius/dec
+
+- many corrections to pass compilation & link (added to correction already done to pass on Linux!) :
+	./src/include/rad_assert.h
+	./src/include/sha1.h
+	./src/lib/Makefile
+	./src/lib/radius.c
+	./src/lib/missing.c
+	./src/main/Makefile.in
+	./src/main/radclient.c
+	./src/main/radiusd.c
+	./src/modules/rlm_eap/libeap/eap_sim.h
+	./src/modules/rlm_eap/libeap/eapcrypto.c
+	./src/modules/rlm_eap/libeap/eapsimlib.c
+	./src/modules/rlm_eap/types/rlm_eap_mschapv2/rlm_eap_mschapv2.c
+	./src/modules/rlm_passwd/rlm_passwd.c
+	./src/modules/rlm_unix/compat.h
+	./raddb/radiusd.conf.in
+
+- launch: (g)make
+
+- launch: cd src ; (g)make -i install
+	=> just do it in 'src' (the install of 'raddb' ans 'share' has been done once and could overwrite personalized config)
+	=> WARNING: install of radeapclient is not totally handled by makefile !!! DO IT BY HAND:
+					- cd /hss_freeradius/dec/bin
+					- cp ../../src/modules/rlm_eap/radeapclient .							(shell script file)
+					- cp ../../src/modules/rlm_eap/.libs/(lt-)radeapclient .libs 		(the real exec file)
+	=> if you modify the radeapclient.c, do not forget to re-install manually the dec/bin/.libs elements
+
+- man, doc, var are not installed (not used for clients)
+	=> if necessary, add /hss_freeradius/man in manpath of clients users
+
+- Utilisation des CLIENTS par montage depuis un autre serveur:
+	* ajouter aux .cshrc des utilisateurs:
+		setenv PATH ${PATH}:/hss_freeradius/dec/bin
+		setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:/hss_freeradius/dec/lib
+
+- Utilisation du SERVER par montage depuis un autre server:
+	* jouter au .cshrc de root:
+		setenv PATH ${PATH}:/hss_freeradius/dec/bin:/hss_freeradius/dec/sbin
+		setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:/hss_freeradius/dec/lib
+	* creer s'ils n'existent pas deja (par root) les repertoires de travail:
+		mkdir /usr/local/var
+		mkdir /usr/local/var/log
+		mkdir /usr/local/var/log/radius
+		mkdir /usr/local/var/log/radius/radacct
+		mkdir /usr/local/var/run
+		mkdir /usr/local/var/run/radiusd
+
+#
+# EmA,25/10/2001
+#
+# Installation process in /hss_freeradius VOB of HSS project
+#
+
+- first install GNU make in a temp var where your PATH point to
+  (I installed it in /var/tmp/anthoin1 of lads0317, so that a
+   GNU make for DEC is available in /var/tmp/anthoin1/local/bin)
+  
+- launch: ./configure --exec-prefix=/hss_freeradius --prefix=/hss_freeradius
+
+- edit src/include/autoconf.h and add:
+		#define int32_t int
+  after the line:
+		#define uint32_t unsigned int
+
+# Has been done once, no more nessary:
+#  - edit src/main/Makefile and add:
+#	   	-L/usr/opt/alt/usr/lib/threads to LDFLAGS
+#	   	-lpthread to LIBS  (and not -lpthreads !!!)
+
+# Has been done once, no more nessary:
+#  - edit src/lib/snprintf.c and replace THEMAX by MAX
+
+# Has been done once, no more nessary:
+#  - edit and src/main/raduse.c add:
+#  		#undef HAVE_UTMPX_H
+#    just before
+#    		#ifdef HAVE_UTMPX_H
+
+- launch: make
+
+- launch: make install

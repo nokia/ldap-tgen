@@ -1,0 +1,98 @@
+#!/bin/bash -e
+# "-e" ensures shell stops on first error
+
+#	------------------------------------------------------------------------------
+#	Date        : 22/07/2005
+#	Author		: E.Anthoine
+#	REL         : <01>
+#	CR/FR       : <Creation>
+#	Description : <Build freeradius stack and check in it in CC>
+# 		    		: contains configure step
+#	------------------------------------------------------------------------------
+
+MAKE_CMD=make 
+#MAKE_CMD="clearmake -C gnu"
+
+##########################################
+#
+#	FREERADIUS
+#
+##########################################
+
+# LOCATIONS
+BUILD_DIR="/hss_freeradius"
+MAIN_DIR="$BUILD_DIR/src/main"
+EAP_DIR="$BUILD_DIR/src/modules/rlm_eap"
+
+# CHOOSE THE RIGHT TARGET x86 for LINUX MONTAVISTA, dec FOR DIGITAL UNIX
+TARGET=x86
+#TARGET=dec
+INSTALL_DIR="/hss_freeradius/$TARGET"
+
+
+cd $BUILD_DIR
+
+# CLEAN & CONFIGURE
+if [ -e "Make.inc" ]
+then
+	echo ">>> Configure already done. Redo it (y/n) ? "
+	read rep
+	if [ $rep = "y" ]
+	then
+		$MAKE_CMD clean
+		rm -f Make.inc
+		./configure --exec-prefix=$INSTALL_DIR --prefix=$INSTALL_DIR
+	else
+		if [ -e "$MAIN_DIR/radclient" ]
+		then
+			echo ">>> Make already done. Clean all (y/n) ? "
+			read rep
+			if [ $rep = "y" ]
+			then
+				$MAKE_CMD clean
+			fi
+		fi
+	fi
+else
+	./configure --exec-prefix=$INSTALL_DIR --prefix=$INSTALL_DIR
+fi
+
+# CHANGE FLAGS ?
+#export CFLAGS="-g -w -pthread -I/3pp_openssl/$TARGET/include/openssl"
+#export LDFLAGS=-L/3pp_openssl/$TARGET/lib
+
+
+echo ">>> Type return to start MAKE"
+read 
+
+# LAUNCH MAKE
+$MAKE_CMD
+cd $EAP_DIR
+$MAKE_CMD
+
+
+echo ">>> Type return to start INSTALL"
+read 
+
+# INSTALL
+cd $INSTALL_DIR/bin
+echo `cleartool co -nc -unre *`
+
+cd $INSTALL_DIR/lib
+echo `cleartool co -nc -unre *`
+
+cd $BUILD_DIR
+$MAKE_CMD -i install
+
+# COMPLETE INSTALL OF RADEAPCLIENT
+echo ">>> Type return to start radeapclient INSTALL"
+read 
+#echo `cleartool co -nc -unre $INSTALL_DIR/bin/.libs/lt-radeapclient`
+if [ -e "$EAP_DIR/.libs/radeapclient" ]
+then
+	cp $EAP_DIR/.libs/radeapclient   $INSTALL_DIR/bin/radeapclient
+else
+	cp $EAP_DIR/.libs/lt-radeapclient   $INSTALL_DIR/bin/radeapclient
+fi
+
+

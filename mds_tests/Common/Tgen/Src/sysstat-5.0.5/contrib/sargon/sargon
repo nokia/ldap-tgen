@@ -1,0 +1,79 @@
+#!/bin/sh
+#
+# Usage: sargon [interval] [count] [days-to-keep] [days-to-keep-uncompressed]
+# Author: John Caruso
+# Modified by Sebastien Godard
+#
+# Synopsis: Replacement for Sun's sar data collection scripts (/usr/lib/sa/sa1
+# and /usr/lib/sa/sa2).  It uses a month-by-month directory structure to allow
+# it to keep more than one month's data; datafiles are named YYMMMM/saDD,
+# and the script maintains links to these datafiles to mimic the standard sar
+# datafile structure.
+#
+# The script does all of what sa1 does and most of what sa2 does, but it
+# doesn't bother doing the sar data summarization that sa2 performs since that
+# data can be generated easily if/when it's needed.
+#
+# Files are automatically compressed or deleted after specified periods.
+#
+# 5/24/2001: Modified to work with Redhat Linux + sysstat 4.0.0
+#
+
+PATH=/usr/bin:/bin
+
+# Modified by SG
+INTERVAL=${1:-1}
+COUNT=${2:-1}
+KEEPDAYS=${3:-365}
+COMPRESSAFTER=${4:-180}
+
+if [ -d /var/adm/sa ]; then
+	SARDATADIR=/var/adm/sa
+elif [ -d /var/log/sa ]; then
+	SARDATADIR=/var/log/sa
+else
+	exit 1
+fi
+CURRENTDIR=`date +%Y%m`
+CURRENTFILE=sa`date +%d`
+FULLCURRENTFILE=$SARDATADIR/$CURRENTDIR/$CURRENTFILE
+
+SADCDIR=/usr/lib/sa
+SADC=$SADCDIR/sadc
+
+MAINTTIME=0300
+LASTMAINTFLAG=LASTMAINT
+
+cd $SARDATADIR || exit 1
+
+[ -d $CURRENTDIR ] || mkdir -p $CURRENTDIR
+touch $CURRENTDIR/$CURRENTFILE
+
+# This is all that's left of Sun's original sa1 script.  The cd probably isn't
+# necessary, but who knows, maybe sadc won't work without it.  No harm.
+#
+(cd $SADCDIR; exec $SADC $INTERVAL $COUNT $FULLCURRENTFILE)
+
+# Remove the "compatibility" link and recreate it to point to the (new)
+# current file (this is done to preserve compatibility with Sun's current
+# sa1/sa2 datafile creation strategy).
+#
+rm -f $CURRENTFILE
+ln -s $CURRENTDIR/$CURRENTFILE $CURRENTFILE
+
+# We use a special flag file to determine if we need to remove old files--
+# the removal is only done if the flag file is > 1 day old.  This allows the
+# script to be run at any interval and still clean up after itself, but keeps
+# it from cleaning up too often if it's run frequently.
+#
+[ -f $LASTMAINTFLAG ] || touch "`date +%m%d`$MAINTTIME" $LASTMAINTFLAG
+
+if [ -n "`find $LASTMAINTFLAG -mtime +1 -print`" ]; then
+	find  *  -type f -name "sa??" -o -name "sa??.gz" -mtime +$KEEPDAYS  \
+		-exec rm -f {} \;
+	find  [0-9]????? -name "sa??" -mtime +$COMPRESSAFTER -type f	    \
+			 -exec gzip {} \; > /dev/null 2>&1
+	rmdir [0-9]?????  > /dev/null 2>&1
+	rm $LASTMAINTFLAG
+fi
+

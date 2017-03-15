@@ -1,0 +1,91 @@
+WHAT IS NLS?
+------------
+NLS stands for National Language Support. It encompasses the features that make
+a program able to support different languages and cultural habits.
+This touches the messages displayed on the screen, but also the format used to
+display the dates or the numbers for example.
+
+
+HOW I ENABLE NLS WITH SYSSTAT?
+------------------------------
+That's easy: Answer 'y' (for 'yes') to the question:
+"Enable National Language Support (NLS)? [y]"
+during configuration stage ('make config').
+Beginning with sysstat release 3.2.2, NLS is now enabled by default.
+
+
+OK, BUT HOW DO I USE IT NOW?
+------------------------------
+You have to set your LANG environment variable to the proper value.
+E.g.:
+	France: fr_FR
+	Germany: de_DE
+	Spain: es_ES
+	Brazil: pt_BR
+	South Africa: af_ZA
+	Norway: nb_NO or nn_NO
+	Italy: it_IT
+	Russia: ru_RU
+	Romania: ro_RO
+	Poland: pl_PL
+	Slovakia: sk_SK
+	Japan: ja_JP
+
+although other possibilities exist.
+If you use bash and you want to configure your system for a french environment,
+enter:
+
+$ export LANG=fr_FR
+
+('$' is the prompt).
+If you use the (Tab) C shell, you would have entered:
+
+% setenv LANG fr_FR
+
+('%' is the prompt).
+Here is a complete example with iostat:
+
+$ export LANG=en_US
+$ iostat   
+Linux 2.2.12 (brooks) 	10/29/99
+avg-cpu:  %user   %nice    %sys   %idle
+           1.49    0.00    1.04   97.47
+Disks:      tps    Kb_read/s    Kb_wrtn/s    Kb_read    Kb_wrtn
+hdisk0     1.03         4.37         0.65      28816       4326
+hdisk1     0.00         0.00         0.00          0          0
+hdisk2     0.00         0.00         0.00          0          0
+hdisk3     0.00         0.00         0.00          0          0
+Total:     1.03         4.37         0.65      28816       4326
+
+$ export LANG=fr_FR
+$ iostat
+Linux 2.2.12 (brooks) 	29.10.1999
+cpu-moy:  %user   %nice    %sys   %idle
+           1,49    0,00    1,04   97,47
+Disques:    tps     Ko_lus/s  Ko_écrits/s     Ko_lus  Ko_écrits
+disque0    1,03         4,37         0,65      28816       4340
+disque1    0,00         0,00         0,00          0          0
+disque2    0,00         0,00         0,00          0          0
+disque3    0,00         0,00         0,00          0          0
+Total:     1,03         4,37         0,65      28816       4340
+
+
+HOW CAN I ADD A NEW LANGUAGE TO SYSSTAT?
+----------------------------------------
+At the present time, sysstat is translated into English, French, German,
+Spanish, Portuguese, Afrikaans, Norwegian, Italian, Russian, Romanian,
+Polish, Slovak and Japanese.
+To add another language, copy an existing Portable Object file (.po) in one
+of your directories (you can copy the file named sysstat.po located in the
+nls/fr directory for instance).
+Update the header of that file to give your name and email address.
+Then you have to translate all the messages quoted in the lines beginning
+with the 'msgid' token...
+Last, mail me this file for inclusion in the next release of sysstat!
+
+For more information, read the documentation coming with the GNU 'gettext'
+package (enter 'info gettext').
+
+--
+Sebastien Godard (sysstat <at> wanadoo.fr)
+

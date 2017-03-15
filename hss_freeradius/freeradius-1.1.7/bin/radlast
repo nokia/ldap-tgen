@@ -1,0 +1,7 @@
+#! /bin/sh
+
+prefix=/local/colin6/FREERADIUS
+localstatedir=${prefix}/var
+logdir=${localstatedir}/log/radius
+
+exec last -f $logdir/radwtmp "$@"

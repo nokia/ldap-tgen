@@ -1,0 +1,72 @@
+#
+# EmA,12/12/2003
+#
+# => Do not try to compile via cmk cross compiler on SUN: it leads to troubles with radeapclient
+# 	  Use instead a native compilation via gcc on a Linux PC (but respect directories names!)
+#
+
+- on a Linux PC, install freeradius in /usr/local/src for example and create the /hss_freeradius dir
+  which will receive the installed binaries
+
+- replace gmake by cmk in the following items: this goes quite better and pass without errors
+
+- copy via ftp generated binaries in the CC VOB
+
+#
+# EmA,26/11/2003
+#
+# Installation process in /hss_freeradius VOB of version snapshot_16/11/2003 (with EAP/SIM)
+# Using Cross-compilation on SUN env => NOT COMPLETE !!!
+#
+
+- on a Linux PC, install freeradius in /usr/local/src for example and create the /hss_freeradius dir
+  which will receive the installed binaries
+
+- clean preceding configures: rm config.cache
+
+- launch: ./configure --exec-prefix=/hss_freeradius/x86 --prefix=/hss_freeradius/x86
+
+- many corrections to pass compilation & link o(added to correction already done to pass on Linux & DEC) :
+	./src/modules/rlm_passwd/rlm_passwd.c	(put 0 on field's size)
+
+- launch: cmk
+
+- launch: cd src ; cmk -i install
+	=> just do it in 'src' (the install of 'raddb' ans 'share' has been done once and could overwrite personalized config)
+	=> WARNING: install of radeapclient is not totally handled by makefile !!! DO IT BY HAND:
+					- cd /hss_freeradius/x86/bin
+					- cp ../../src/modules/rlm_eap/radeapclient .							(shell script file)
+					- cp ../../src/modules/rlm_eap/.libs/(lt-)radeapclient .libs 		(the real exec file)
+	=> if you modify the radeapclient.c, do not forget to re-install manually the x86/bin/.libs elements
+
+- man, doc, var are not installed (not used for clients)
+	=> if necessary, add /hss_freeradius/man in manpath of clients users
+
+- Utilisation des CLIENTS par montage depuis un autre serveur:
+	* ajouter aux .cshrc des utilisateurs:
+		setenv PATH ${PATH}:/hss_freeradius/x86/bin
+		setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:/opt/mvlcge/devkit/x86/pentium3/target/usr/lib:/hss_freeradius/x86/lib
+
+- Utilisation du SERVER par montage depuis un autre server:
+	* jouter au .cshrc de root:
+		setenv PATH ${PATH}:/hss_freeradius/x86/bin:/hss_freeradius/x86/sbin
+		setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:/opt/mvlcge/devkit/x86/pentium3/target/usr/lib:/hss_freeradius/x86/lib
+	* creer s'ils n'existent pas deja (par root) les repertoires de travail:
+		mkdir /usr/local/var
+		mkdir /usr/local/var/log
+		mkdir /usr/local/var/log/radius
+		mkdir /usr/local/var/log/radius/radacct
+		mkdir /usr/local/var/run
+		mkdir /usr/local/var/run/radiusd
+
+#
+# EmA,28/02/2002
+#
+# Installation process in Linux PC for simulation (HSS project)
+#
+
+- log as root on Linux PC and go in /usr/local dir
+
+- untar linux_client_freeradius.tar
+  => add freeradius elements in /usr/local/bin and /usr/local/etc directories
+

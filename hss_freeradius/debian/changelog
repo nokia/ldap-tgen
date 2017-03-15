@@ -1,0 +1,172 @@
+freeradius (0.9.2-cvs20031016-0) unstable; urgency=low
+
+  * Current CVS version
+
+ -- Paul Hampson <Paul.Hampson@anu.edu.au>  Thu, 16 Oct 2003 06:15:25 +1000
+
+freeradius (0.9.2-0) unstable; urgency=low
+
+  * New upstream release
+  * Added logrotate script for /var/log/freeradius/radius.log
+  * Don't leave symlinks to config.{guess,sub} lying around to
+    confuse dpkg-source.
+
+ -- Paul Hampson <Paul.Hampson@anu.edu.au>  Wed, 15 Oct 2003 05:02:17 +1000
+
+freeradius (0.9.1-0) unstable; urgency=low
+
+  * New upstream release.
+  * Renamed radiusd(8) to freeradius(8) to match binary
+  * Build-Depend on libtool1.4 | libtool (< 1.5) due to
+    new libtool 1.5 package.
+  * Merged multiple sed calls into a single sed call in debian/rules
+  * Installed SQL database examples into /usr/share/doc/freeradius/examples
+  * Modify initscript to only -HUP the parent process
+
+ -- Paul Hampson <Paul.Hampson@anu.edu.au>  Fri,  5 Sep 2003 00:54:41 +1000
+
+freeradius (0.9.0-1) unstable; urgency=low
+
+  * New Upstream release.
+   - Upstream dictionary files are in /usr/share/freeradius.
+   - Modified to 'configure{,.in}' to work with openssl 0.9.7 and 0.9.6
+  * Renamed pacakges to 'freeradius*' from 'radiusd-freeradius*'.
+  * Moved file hierarchy around to be neater:
+   - /etc/raddb -> /etc/freeradius
+   - /usr/share/doc/radiusd-freeradius -> /usr/share/doc/freeradius
+   - /var/log/radiusd-freeradius -> /var/log/freeradius
+   - /var/run/radiusd/radiusd.pid -> /var/run/freeradius/freeradius.pid
+  * Included RFCs in documentation.
+  * Enabled the daemon to run under user 'freerad:freerad' by default.
+  * Added support for DEB_BUILD_OPTIONS for policy 3.5.9 compliance.
+  * Installed SNMP mibs for Radius
+
+ -- Paul Hampson <Paul.Hampson@anu.edu.au>  Sun, 20 Jul 2003 06:56:28 +1000
+
+radiusd-freeradius (0.7+cvs20021113-1) unstable; urgency=low
+ 
+  * Explicitly excluding modules not in the "stable" list.
+  * Updated policy version number.
+  * Moved from non-US/main to main.
+  * Put pidfile in package's own directory.
+  * Package not as buggy and unstable modules are easily identifiable. 
+    (closes: Bug#142217)
+  * Init script handles failure better. (closes: Bug#151264)
+  * New upstream release.  (closes: Bug#140536)
+  * Uses available version of postgresql.  (closes: Bug#139290)
+  * Removed "conflicts" with other radiusds.
+  * Added new build-dep on libtool.
+  * Changed section to "net" from "admin".
+  * New config.guess.  (closes: Bug#168647)
+  * Run with freerad user and group.  (closes: Bug#168272)
+  * Added libssl-dev as build-dep.  (closes: #131832)
+
+ -- Chad Miller <cmiller@debian.org>  Wed, 13 Nov 2002 17:01:19 -0500
+
+radiusd-freeradius (0.5+cvs20020408-1) unstable; urgency=high
+
+  * New build-dep on libssl-dev, which is implied by another dep, but making 
+    explicit for builders on Potato.  (closes: Bug#131832)
+  * Built against new postgresql libraries, so automatic dep tracking has 
+    the correct version, now.  (closes: Bug#139290)
+  * Removed python example module.
+  * Explicitly disabled beta ippool module.
+
+ -- Chad Miller <cmiller@debian.org>  Mon,  8 Apr 2002 11:48:30 -0400
+
+radiusd-freeradius (0.4-1) unstable; urgency=high
+
+  * New release.
+  * upstream: New EAP support.
+  * upstream: Fixed security bug in string translation.
+
+ -- Chad Miller <cmiller@debian.org>  Thu, 13 Dec 2001 09:26:45 -0500
+
+radiusd-freeradius (0.3-2) unstable; urgency=low
+
+  * Moved to using logrotate instead of cron for files.
+  * Fixed permissions of log files. (closes: Bug#116242,#116243)
+  * Close file descriptors of stdin, stdout, stderr, if not debugging.
+    (closes: Bug#116768)
+  * Made package "non-native".  (An upload issue, not code.)  
+    (closes: Bug#119161)
+
+ -- Chad Miller <cmiller@debian.org>  Tue, 20 Nov 2001 10:50:20 -0500
+
+radiusd-freeradius (0.3-1) unstable; urgency=low
+
+  * New release.
+
+ -- Chad Miller <cmiller@debian.org>  Tue,  9 Oct 2001 18:16:23 -0400
+
+radiusd-freeradius (0.2+20010917-1) unstable; urgency=low
+
+  * Removed old mysql build-dep.  (closes: Bug#112541)
+
+ -- Chad Miller <cmiller@debian.org>  Mon, 17 Sep 2001 11:38:24 -0400
+
+radiusd-freeradius (0.2+20010912-1) unstable; urgency=low
+
+  * Build-dep mysql changed package names.
+  * Added build-dep for libmysqlclient10-dev.  (closes: Bug#111880)
+  * In acct_users, keep reply pairs.
+  * Integer values are printed as unsigned numbers, to comply with RFC2866.
+  * Fixed broken/reversed auth comparisons in SQL module.
+  * Sucked out CPPness from inside a printf, as printf is a macro in newer
+    compilers (gcc3.0, e.g.).  (closes: Bug#100889)
+  * Sundry LDAP configuration, unresponsive thread, and proxying fixes.
+  * Added user 'freerad' into the 'shadow' group.
+  * Fixed UUCP-style of restricting time of log-in.
+  * Changed debugging messages to give more info about execution flow.
+  * Better counter module.  
+  * Inserted CHAP support for SQL modules.
+  * Removed possible infinite loop.
+
+ -- Chad Miller <cmiller@debian.org>  Wed, 12 Sep 2001 21:21:47 -0400
+
+radiusd-freeradius (0.1+20010527-1) unstable; urgency=low
+
+  * Updated config.{guess,sub} to recent versions.  (closes: Bug#98183)
+  * Updated build-dep to reflect supercession of libltdl0-dev by libltdl3-dev
+    (closes: Bug#98914)
+
+ -- Chad Miller <cmiller@debian.org>  Sun, 27 May 2001 11:44:40 -0400
+
+radiusd-freeradius (0.1+20010517-1) unstable; urgency=low
+
+  * Moved package to non-US to allow in Kerberos and PostgreSQL.
+  * Set Suggests of modules to main package.
+  * Better compile-time support of *BSD.
+
+ -- Chad Miller <cmiller@debian.org>  Thu, 17 May 2001 14:46:51 -0400
+
+radiusd-freeradius (0.1-1) unstable; urgency=low
+
+  * First beta release!
+  * Added generalized SQL support for ODBC, Oracle, MySQL, and Postgres.
+  * Added shasta, microsoft, and redback dictionaries.
+  * Fixed rc.d restart rule.
+  * Added a user to own the daemon and logfiles.
+  * SQL DB handles more forgiving of unreachable servers at startup.
+  * SQL Crypt-Password attribute support.
+  * Fixed cron log rotation.
+  * Put module libraries in own directory.
+  * Removed bogus build-dep.  (closes: Bug#87277)
+  * Better permissions on /etc/raddb
+  * Use correct LDAP library.
+  * Fork ldap, postgresql, and mysql modules into different packages.
+  * Remove Kerberos, as it's restricted from export.
+
+ -- Chad Miller <cmiller@debian.org>  Mon,  7 May 2001 16:37:46 -0400
+
+radiusd-freeradius (0.0.20010109-1) unstable; urgency=low
+
+  * Changed priority, from standard to optional.
+
+ -- Chad Miller <cmiller@debian.org>  Tue,  9 Jan 2001 14:01:38 -0500
+
+radiusd-freeradius (0.0.20001227-1) unstable; urgency=low
+
+  * Initial revision. (closes: Bug#76476)
+
+ -- Chad Miller <cmiller@debian.org>  Wed, 27 Dec 2000 11:58:56 -0500

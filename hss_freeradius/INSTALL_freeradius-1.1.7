@@ -1,0 +1,21 @@
+The installation works only on VMWARE since some libraries are lacking.
+On /local partition, execute:
+
+./configure --prefix=/local/colin6/FREERADIUS
+
+make
+make install
+
+/local/colin6/FREERADIUS is the directory where is installed the product.
+
+/hss_freeradius/freeradius-1.1.7 is a copy of that directory.
+
+I have also added the libraries necessary for execution, which are not in every
+station in /hss_freeradius/freeradius-1.1.7/otherLibs.
+
+A command for using the freeradius server is 
+/hss_freeradius/freeradius-1.1.7/sbin/radiusd -d/mds_tests/mas/UnitaryTesting/Proxy/AccessRequest/raddb -X -A
+if logs are on
+and 
+/hss_freeradius/freeradius-1.1.7/sbin/radiusd -d/mds_tests/mas/UnitaryTesting/Proxy/AccessRequest/raddb
+without logs.

@@ -1,0 +1,4 @@
+Tue Sep 25 14:37:49 2007 : Info: Using deprecated naslist file.  Support for this will go away soon.
+Tue Sep 25 14:37:49 2007 : Info: rlm_eap_tls: Loading the certificate file as a chain
+Tue Sep 25 14:37:49 2007 : Info: WARNING: rlm_eap_tls: Unable to set DH parameters.  DH cipher suites may not work!
+Tue Sep 25 14:37:49 2007 : Info: Ready to process requests.
