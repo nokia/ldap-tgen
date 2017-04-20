@@ -1,0 +1,31 @@
+FROM debian:8
+
+ENV http_proxy http://proxy.lbs.alcatel-lucent.com:8000
+ENV https_proxy $http_proxy
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libssl-dev \
+    libncurses5-dev \
+    libldap2-dev \
+    libsasl2-dev 
+
+ENV root_dir /home/test/tgen-local
+
+WORKDIR ${root_dir}
+
+COPY hss_freeradius hss_freeradius
+COPY mds_tests mds_tests
+COPY openldap openldap
+
+RUN mkdir mds_tests/Common/Tgen/fake_lib
+
+WORKDIR mds_tests/Common/Tgen/fake_lib
+
+RUN ln -s $(find /usr/lib -iname "libssl*so") libssl.so.6
+RUN ln -s $(find /usr/lib -iname "libcrypto*so") libcrypto.so.6
+
+ENV LD_LIBRARY_PATH $root_dir/hss_freeradius/x86_64/lib:$root_dir/mds_tests/uma/Common/WpaSupplicant/x86_64:$root_dir/mds_tests/Common/Tgen/fake_lib
+
+WORKDIR ${root_dir}/mds_tests/Common/Tgen/Src
+
