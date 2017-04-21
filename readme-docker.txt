@@ -15,3 +15,8 @@ run ldap-tgen in container:
 
 sudo docker build -t ldap-tgen-img .
 sudo docker run ldap-tgen-img ./tgen_mas
+
+
+Images are available on docker hub, so you can now just run:
+
+docker run ymartineau/ldap-tgen-img ./tgen_mas
