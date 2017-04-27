@@ -69,19 +69,37 @@ gidNumber: 1000
 
 in tgen, .ini file must be configured in $HOME/TestU:
 
-[Popul_*]
-...
+[Popul_100]
+description = example users
+min = 2
+max = 10
+nb = 8
+scope=2
+pdn = dc=com
+rdn_i = dc=example
+nai_i = 0
+filter_i=(uid=abarnes)
+passwd_i = 0
+authtype = 0
 
-[Scenario_*]
-..
+
+[Scenario_6]
+description = Simple LdapSearch request on a whole user
+population = 100
 action1 = SCE_Begin
 action2 = LDAP_Bind_Rq
 action3 = LDAP_Search_Rq,"\0","\*"
 action4 = LDAP_UnBind_Rq
 action5 = SCE_End
 
-[Trafic_*]
-...
+
+[Trafic_5]
+description = Global traffic definition
+scenario1 = Scenario_6
+rate1 = 100
+
+
+
 
 available actions:
 
